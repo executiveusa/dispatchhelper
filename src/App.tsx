@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import Booking from "./pages/Booking";
 import Profile from "./pages/Profile";
 import Dispatch from "./pages/Dispatch";
+import Pricing from "./pages/Pricing";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/booking" element={<Booking />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/dispatch" element={<Dispatch />} />
+            <Route path="/pricing" element={<Pricing />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
