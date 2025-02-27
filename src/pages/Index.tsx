@@ -11,9 +11,9 @@ const Index = () => {
       
       {/* Hero Section */}
       <section className="relative pt-32 pb-24">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <div className="grid grid-cols-2 h-full">
+        {/* Background Images */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 h-full">
             <div className="h-full">
               <img
                 src="https://images.unsplash.com/photo-1533650936985-1f44973dc248?q=80&w=2070"
@@ -21,7 +21,7 @@ const Index = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="h-full">
+            <div className="h-full hidden md:block">
               <img
                 src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=2070"
                 alt="Luxury Sprinter with Driver"
@@ -40,7 +40,7 @@ const Index = () => {
             South Florida's premier AI-powered luxury transportation service.
             Elevating your travel experience in Miami, West Palm Beach, and beyond.
           </p>
-          <div className="flex justify-center space-x-4">
+          <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
             <Button size="lg" className="bg-blue-600 text-white hover:bg-blue-700">
               Book Service
             </Button>
@@ -142,7 +142,7 @@ const Index = () => {
       <section id="team" className="py-24 bg-blue-600">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-mono font-bold mb-12 text-white">/OUR FLEET</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="p-6">
               <img
                 src="https://images.unsplash.com/photo-1583267746897-2cf415887172?q=80&w=2070"
@@ -254,7 +254,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="bg-white border-t border-blue-100 py-12">
         <div className="container mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
               <h3 className="text-lg font-bold mb-4 text-blue-600">DISPATCH HELPER</h3>
               <p className="text-sm text-gray-600">
