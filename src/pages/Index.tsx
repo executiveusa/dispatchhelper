@@ -13,12 +13,23 @@ const Index = () => {
       <section className="relative pt-32 pb-24">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1617869884925-f8051f439f94?q=80&w=2070"
-            alt="Luxury Transportation"
-            className="w-full h-full object-cover opacity-20"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-white/80"></div>
+          <div className="grid grid-cols-2 h-full">
+            <div className="h-full">
+              <img
+                src="https://images.unsplash.com/photo-1533650936985-1f44973dc248?q=80&w=2070"
+                alt="Luxury Limousine with Driver"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="h-full">
+              <img
+                src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=2070"
+                alt="Luxury Sprinter with Driver"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-white/80"></div>
         </div>
         
         <div className="container mx-auto text-center relative z-10">
