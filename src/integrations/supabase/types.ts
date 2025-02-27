@@ -9,7 +9,135 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          created_at: string
+          dropoff_location: string
+          estimated_duration: number
+          id: string
+          pickup_location: string
+          pickup_time: string
+          special_requests: string | null
+          status: Database["public"]["Enums"]["booking_status"] | null
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        Insert: {
+          created_at?: string
+          dropoff_location: string
+          estimated_duration: number
+          id?: string
+          pickup_location: string
+          pickup_time: string
+          special_requests?: string | null
+          status?: Database["public"]["Enums"]["booking_status"] | null
+          updated_at?: string
+          user_id: string
+          vehicle_id: string
+        }
+        Update: {
+          created_at?: string
+          dropoff_location?: string
+          estimated_duration?: number
+          id?: string
+          pickup_location?: string
+          pickup_time?: string
+          special_requests?: string | null
+          status?: Database["public"]["Enums"]["booking_status"] | null
+          updated_at?: string
+          user_id?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      vehicles: {
+        Row: {
+          capacity: number
+          created_at: string
+          hourly_rate: number
+          id: string
+          is_available: boolean | null
+          license_plate: string
+          make: string
+          model: string
+          type: Database["public"]["Enums"]["vehicle_type"]
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          capacity: number
+          created_at?: string
+          hourly_rate: number
+          id?: string
+          is_available?: boolean | null
+          license_plate: string
+          make: string
+          model: string
+          type: Database["public"]["Enums"]["vehicle_type"]
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          capacity?: number
+          created_at?: string
+          hourly_rate?: number
+          id?: string
+          is_available?: boolean | null
+          license_plate?: string
+          make?: string
+          model?: string
+          type?: Database["public"]["Enums"]["vehicle_type"]
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +146,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      booking_status:
+        | "pending"
+        | "confirmed"
+        | "in_progress"
+        | "completed"
+        | "cancelled"
+      vehicle_type: "sedan" | "suv" | "sprinter" | "limousine"
     }
     CompositeTypes: {
       [_ in never]: never
