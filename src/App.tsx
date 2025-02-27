@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Booking from "./pages/Booking";
 import Profile from "./pages/Profile";
+import Dispatch from "./pages/Dispatch";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/dispatch" element={<Dispatch />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
