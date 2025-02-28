@@ -4,17 +4,20 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useToast } from "@/components/ui/use-toast";
-import { DispatchRequest, Driver, Booking } from "./types";
+import { DispatchRequest, Booking } from "./types";
+import { useDriverStatus } from "@/hooks/useDriverStatus";
 
 export const useDispatchOperations = () => {
   const [requests, setRequests] = useState<DispatchRequest[]>([]);
-  const [drivers, setDrivers] = useState<Driver[]>([]);
   const [selectedRequest, setSelectedRequest] = useState<DispatchRequest | null>(null);
   const [selectedDriver, setSelectedDriver] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [assigningDriver, setAssigningDriver] = useState(false);
   const { toast: uiToast } = useToast();
   const navigate = useNavigate();
+  
+  // Use our new custom hook for driver management
+  const { drivers, isLoading: loadingDrivers, fetchDrivers } = useDriverStatus();
   
   useEffect(() => {
     const checkUser = async () => {
@@ -26,7 +29,6 @@ export const useDispatchOperations = () => {
 
     checkUser();
     fetchDispatchRequests();
-    fetchDrivers();
   }, [navigate]);
 
   const fetchDispatchRequests = async () => {
@@ -65,22 +67,6 @@ export const useDispatchOperations = () => {
       });
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchDrivers = async () => {
-    try {
-      // In a real implementation, you'd fetch drivers from your database
-      // Simulating data for now
-      const dummyDrivers: Driver[] = [
-        { id: "1", name: "John Smith", phone: "305-555-1234", status: "available", current_location: "Miami Beach" },
-        { id: "2", name: "Maria Garcia", phone: "786-555-5678", status: "busy", current_location: "Downtown Miami" },
-        { id: "3", name: "Robert Johnson", phone: "954-555-9012", status: "available", current_location: "Fort Lauderdale" },
-        { id: "4", name: "Lisa Chen", phone: "561-555-3456", status: "offline", current_location: "West Palm Beach" },
-      ];
-      setDrivers(dummyDrivers);
-    } catch (error: any) {
-      console.error("Error fetching drivers:", error);
     }
   };
 
@@ -134,7 +120,7 @@ export const useDispatchOperations = () => {
     drivers,
     selectedRequest,
     selectedDriver,
-    loading,
+    loading: loading || loadingDrivers,
     assigningDriver,
     setSelectedDriver,
     handleSelectRequest,
