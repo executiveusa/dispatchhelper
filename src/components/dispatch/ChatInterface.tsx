@@ -31,7 +31,7 @@ const ChatInterface: React.FC = () => {
     setMessages([
       {
         id: "welcome",
-        content: "Hello! I'm your AI dispatch assistant. How can I help you today?",
+        content: "Hello! I'm your AI dispatch assistant. How can I help you today? Ask me about bookings, driver status, or route optimization.",
         sender: "ai",
         timestamp: new Date(),
       },
@@ -158,7 +158,7 @@ const ChatInterface: React.FC = () => {
                   <span className="font-medium">AI Assistant</span>
                 </div>
                 <div className="mt-2 flex items-center space-x-2">
-                  <LoadingSpinnerIcon className="h-5 w-5" />
+                  <LoadingSpinnerIcon />
                   <span>Thinking...</span>
                 </div>
               </div>
