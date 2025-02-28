@@ -14,10 +14,13 @@ import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import LoadingSpinnerIcon from "@/components/LoadingSpinnerIcon";
 
+// Define types that match our database schema
+type BookingStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
+
 type DispatchRequest = {
   id: string;
   created_at: string;
-  status: "pending" | "assigned" | "in_progress" | "completed" | "cancelled";
+  status: BookingStatus;
   client_name: string;
   client_phone: string;
   pickup_location: string;
@@ -44,8 +47,11 @@ type Booking = {
   pickup_location: string;
   dropoff_location: string;
   pickup_time: string;
-  special_requests: string;
-  status: "pending" | "assigned" | "in_progress" | "completed" | "cancelled";
+  special_requests: string | null;
+  status: BookingStatus;
+  updated_at: string;
+  estimated_duration: number;
+  driver_id?: string;
 };
 
 export default function Dispatch() {
@@ -94,7 +100,7 @@ export default function Dispatch() {
         pickup_time: booking.pickup_time,
         notes: booking.special_requests || "",
         vehicle_id: booking.vehicle_id,
-        driver_id: booking.status === "assigned" ? "1" : undefined // Default value for assigned bookings
+        driver_id: booking.driver_id
       }));
       
       setRequests(dispatchRequests);
@@ -147,7 +153,7 @@ export default function Dispatch() {
         .from("bookings")
         .update({ 
           driver_id: selectedDriver,
-          status: "assigned" 
+          status: "confirmed" // Using "confirmed" instead of "assigned" to match our database schema
         })
         .eq("id", selectedRequest.id);
       
@@ -174,7 +180,7 @@ export default function Dispatch() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending": return "bg-yellow-200 text-yellow-800";
-      case "assigned": return "bg-blue-200 text-blue-800";
+      case "confirmed": return "bg-blue-200 text-blue-800"; // Changed from "assigned" to "confirmed"
       case "in_progress": return "bg-purple-200 text-purple-800";
       case "completed": return "bg-green-200 text-green-800";
       case "cancelled": return "bg-red-200 text-red-800";
