@@ -11,6 +11,7 @@ import Booking from "./pages/Booking";
 import Profile from "./pages/Profile";
 import Dispatch from "./pages/Dispatch";
 import Pricing from "./pages/Pricing";
+import ChatPage from "./pages/ChatPage";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/profile" element={<Profile />} />
             <Route path="/dispatch" element={<Dispatch />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/chat" element={<ChatPage />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
