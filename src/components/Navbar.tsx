@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { UserCircle, LogOut } from "lucide-react";
+import { UserCircle, LogOut, Zap } from "lucide-react";
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
@@ -15,8 +15,13 @@ const Navbar = () => {
   return (
     <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-sm shadow-sm">
       <div className="container mx-auto flex items-center justify-between h-16">
-        <Link to="/" className="font-mono text-xl font-bold text-blue-600">
-          DISPATCH HELPER
+        <Link to="/" className="flex items-center space-x-2">
+          <div className="flex items-center justify-center w-8 h-8 rounded-md bg-purple-600 text-white">
+            <Zap className="h-5 w-5" />
+          </div>
+          <span className="font-mono text-xl font-bold text-purple-600">
+            SPATCHY AI
+          </span>
         </Link>
         
         <div className="hidden md:flex items-center space-x-6">
@@ -50,27 +55,27 @@ const Navbar = () => {
           {user ? (
             <>
               <Link to="/booking">
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700">Book Now</Button>
+                <Button size="sm" className="bg-purple-600 hover:bg-purple-700">Book Now</Button>
               </Link>
               <Link to="/profile">
-                <Button variant="ghost" size="sm" className="text-blue-600">
+                <Button variant="ghost" size="sm" className="text-purple-600">
                   <UserCircle className="h-4 w-4 mr-2" />
                   Profile
                 </Button>
               </Link>
-              <Button variant="ghost" size="icon" onClick={() => signOut()} className="text-blue-600">
+              <Button variant="ghost" size="icon" onClick={() => signOut()} className="text-purple-600">
                 <LogOut className="h-4 w-4" />
               </Button>
             </>
           ) : (
             <>
               <Link to="/auth">
-                <Button variant="ghost" size="sm" className="text-blue-600">
+                <Button variant="ghost" size="sm" className="text-purple-600">
                   Sign In
                 </Button>
               </Link>
               <Link to="/booking">
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700">Book Now</Button>
+                <Button size="sm" className="bg-purple-600 hover:bg-purple-700">Book Now</Button>
               </Link>
             </>
           )}
