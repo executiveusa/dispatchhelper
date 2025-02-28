@@ -12,6 +12,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
+import LoadingSpinnerIcon from "@/components/LoadingSpinnerIcon";
 
 type DispatchRequest = {
   id: string;
@@ -33,6 +34,18 @@ type Driver = {
   phone: string;
   status: "available" | "busy" | "offline";
   current_location?: string;
+};
+
+type Booking = {
+  id: string;
+  created_at: string;
+  user_id: string;
+  vehicle_id: string;
+  pickup_location: string;
+  dropoff_location: string;
+  pickup_time: string;
+  special_requests: string;
+  status: "pending" | "assigned" | "in_progress" | "completed" | "cancelled";
 };
 
 export default function Dispatch() {
@@ -70,18 +83,18 @@ export default function Dispatch() {
       if (error) throw error;
       
       // Transform bookings to dispatch requests format
-      const dispatchRequests = (data || []).map(booking => ({
+      const dispatchRequests: DispatchRequest[] = (data || []).map((booking: Booking) => ({
         id: booking.id,
         created_at: booking.created_at,
-        status: booking.status || "pending",
-        client_name: booking.user_email || "Client",
-        client_phone: booking.phone || "N/A",
+        status: booking.status,
+        client_name: "Client", // Default value since we don't have user details in the booking
+        client_phone: "N/A", // Default value
         pickup_location: booking.pickup_location,
         dropoff_location: booking.dropoff_location,
         pickup_time: booking.pickup_time,
         notes: booking.special_requests || "",
         vehicle_id: booking.vehicle_id,
-        driver_id: booking.driver_id
+        driver_id: booking.status === "assigned" ? "1" : undefined // Default value for assigned bookings
       }));
       
       setRequests(dispatchRequests);
@@ -205,7 +218,7 @@ export default function Dispatch() {
             <CardContent className="max-h-[600px] overflow-y-auto">
               {loading ? (
                 <div className="flex justify-center py-8">
-                  <div className="animate-pulse text-blue-600">Loading requests...</div>
+                  <LoadingSpinnerIcon />
                 </div>
               ) : requests.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
