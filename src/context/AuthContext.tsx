@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -7,6 +8,7 @@ interface AuthContextProps {
   profile: any | null;
   signOut: () => Promise<void>;
   loading: boolean;
+  isAdmin: boolean; // Add isAdmin property
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -14,12 +16,14 @@ const AuthContext = createContext<AuthContextProps>({
   profile: null,
   signOut: async () => {},
   loading: true,
+  isAdmin: false, // Default isAdmin to false
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<any | null>(null);
   const [profile, setProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false); // Add isAdmin state
   const { toast } = useToast();
 
   useEffect(() => {
@@ -43,6 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         fetchProfile(session.user.id);
       } else {
         setProfile(null);
+        setIsAdmin(false); // Reset isAdmin when logged out
       }
     });
 
@@ -61,6 +66,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) throw error;
       setProfile(data);
+      
+      // Check if user is an admin (this could be based on a column in the profiles table)
+      // For this example, we'll check for an is_admin column
+      setIsAdmin(data?.is_admin === true);
     } catch (error: any) {
       console.error("Error fetching profile:", error.message);
     }
@@ -84,7 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, signOut, loading }}>
+    <AuthContext.Provider value={{ user, profile, signOut, loading, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

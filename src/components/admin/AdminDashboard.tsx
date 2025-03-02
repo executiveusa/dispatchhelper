@@ -24,15 +24,17 @@ const AdminDashboard: React.FC = () => {
   const fetchChatMessages = async () => {
     setIsLoading(true);
     try {
+      // Use Supabase's RPC function to get the view data
       const { data, error } = await supabase
-        .from("admin_chat_messages")
-        .select("*")
-        .order("created_at", { ascending: false })
+        .rpc('get_admin_chat_messages')
+        .order('created_at', { ascending: false })
         .limit(100);
 
       if (error) throw error;
-      setMessages(data);
-    } catch (error) {
+      
+      // Type assertion to ensure the data matches our ChatMessage interface
+      setMessages(data as ChatMessage[]);
+    } catch (error: any) {
       console.error("Error fetching messages:", error);
       setError("Failed to load chat messages");
     } finally {
