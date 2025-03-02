@@ -17,3 +17,4 @@ port = 54323
 verify_jwt = false
 [functions.ai-dispatch]
 verify_jwt = false
+

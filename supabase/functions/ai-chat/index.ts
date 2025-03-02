@@ -7,16 +7,10 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Create a Supabase client
-const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
-const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-
-// This creates a Supabase client with the service role key (full admin access)
-const supabaseAdmin = createSupabaseClient(supabaseUrl, supabaseKey);
-
 interface RequestData {
   message: string;
   userId: string;
+  language?: string;
 }
 
 serve(async (req) => {
@@ -26,9 +20,18 @@ serve(async (req) => {
   }
 
   try {
+    // Get the OpenAI API key from environment variable
+    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+    if (!openAIApiKey) {
+      return new Response(
+        JSON.stringify({ error: 'OpenAI API key not configured' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Get the request body
     const data: RequestData = await req.json();
-    const { message, userId } = data;
+    const { message, userId, language = 'en' } = data;
 
     if (!message) {
       return new Response(
@@ -37,10 +40,15 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Processing message from user ${userId}: ${message}`);
+    console.log(`Processing message from user ${userId}: ${message} in language: ${language}`);
+
+    // Create a Supabase client for database operations
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+    const supabase = createSupabaseClient(supabaseUrl, supabaseKey);
 
     // Store the user message in the database
-    const { error: insertError } = await supabaseAdmin
+    const { error: insertError } = await supabase
       .from('chat_messages')
       .insert({
         user_id: userId,
@@ -52,28 +60,41 @@ serve(async (req) => {
       console.error('Error storing user message:', insertError);
     }
 
-    // Process the message and generate a reply
-    // This is a simple implementation - in a production system, you'd likely 
-    // integrate with a more sophisticated AI model like OpenAI
-    let reply = '';
-    const lowercaseMessage = message.toLowerCase();
-    
-    if (lowercaseMessage.includes('book') || lowercaseMessage.includes('reservation')) {
-      reply = "I can help you book a ride! Please provide your pickup location, destination, and preferred time.";
-    } else if (lowercaseMessage.includes('cancel')) {
-      reply = "I can help you cancel a booking. Please provide your booking reference number.";
-    } else if (lowercaseMessage.includes('status') || lowercaseMessage.includes('where')) {
-      reply = "I can check the status of your booking for you. Can you provide your booking reference or the date and time of your reservation?";
-    } else if (lowercaseMessage.includes('cost') || lowercaseMessage.includes('price') || lowercaseMessage.includes('fare')) {
-      reply = "Our pricing depends on distance, time, and vehicle type. If you provide your trip details, I can give you an estimate.";
-    } else if (lowercaseMessage.includes('vehicle') || lowercaseMessage.includes('car') || lowercaseMessage.includes('limo')) {
-      reply = "We offer sedans, SUVs, luxury vehicles, and limousines. Which type of vehicle would you prefer?";
-    } else {
-      reply = "Thank you for your message. How can I assist you with your transportation needs today?";
+    // Call OpenAI API
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: `You are an AI dispatch assistant for a transportation service. 
+                     You help users book rides, check ride status, and answer questions.
+                     Keep responses concise and helpful. Respond in ${language}.`
+          },
+          { role: 'user', content: message }
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('OpenAI API error:', errorData);
+      return new Response(
+        JSON.stringify({ error: 'Failed to get response from AI service' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
+    const result = await response.json();
+    const reply = result.choices[0].message.content;
+
     // Store the assistant's reply in the database
-    const { error: replyError } = await supabaseAdmin
+    const { error: replyError } = await supabase
       .from('chat_messages')
       .insert({
         user_id: userId,
@@ -98,7 +119,7 @@ serve(async (req) => {
   }
 });
 
-// Helper function to create a Supabase client (simplified version)
+// Helper function to create a Supabase client
 function createSupabaseClient(supabaseUrl: string, supabaseKey: string) {
   const headers = {
     'apikey': supabaseKey,

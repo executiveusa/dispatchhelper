@@ -1,83 +1,17 @@
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
 
-// Define CORS headers
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+};
 
-// Mock implementation of processing functions
-async function processFileContent(fileData: any) {
-  console.log("Processing file content:", fileData);
-  return { 
-    extractedData: "Sample extracted data",
-    keywords: ["dispatch", "automation", "AI"]
-  };
+interface RequestData {
+  message: string;
+  userId: string;
+  language?: string;
 }
-
-async function trainAIModel(data: any) {
-  console.log("Training AI model with data:", data);
-  return { success: true, modelId: "model-" + Date.now() };
-}
-
-async function automateEmailQuotes(data: any) {
-  console.log("Automating email quotes:", data);
-  return {
-    quote: {
-      price: Math.floor(Math.random() * 1000) + 100,
-      delivery: "2-3 business days",
-      services: ["Dispatch", "Delivery", "Tracking"]
-    }
-  };
-}
-
-async function chatWithAI(message: string) {
-  console.log("Chat message received:", message);
-  const responses = [
-    "I'll help you schedule that dispatch right away.",
-    "Your delivery request has been processed successfully.",
-    "I can assist with tracking your order.",
-    "Let me check the status of your dispatch.",
-    "I've found the information you requested about our services."
-  ];
-  return responses[Math.floor(Math.random() * responses.length)];
-}
-
-async function translateMessage(message: string, language: string) {
-  console.log(`Translating message to ${language}:`, message);
-  // Mock translation - in a real app, you'd call a translation API
-  if (language === 'es') {
-    return `Spanish: ${message}`;
-  } else if (language === 'fr') {
-    return `French: ${message}`;
-  } else if (language === 'de') {
-    return `German: ${message}`;
-  }
-  return message;
-}
-
-async function processVoice(audioData: any) {
-  console.log("Processing voice data:", audioData);
-  return "This is the transcribed text from the audio recording.";
-}
-
-async function fetchHubSpotData() {
-  console.log("Fetching HubSpot data");
-  return {
-    contacts: [
-      { id: 1, name: "John Doe", email: "john@example.com" },
-      { id: 2, name: "Jane Smith", email: "jane@example.com" }
-    ],
-    deals: [
-      { id: 101, name: "Enterprise Deal", amount: 5000 },
-      { id: 102, name: "Small Business Deal", amount: 1500 }
-    ]
-  };
-}
-
-// Performance monitoring
-let emailProcessingTimes: number[] = [];
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -86,101 +20,163 @@ serve(async (req) => {
   }
 
   try {
-    const url = new URL(req.url);
-    const path = url.pathname.split('/').pop();
-    
-    if (path === 'upload' && req.method === 'POST') {
-      // In a real implementation, this would handle file uploads
-      // For now, we'll mock it
-      const formData = await req.formData();
-      const file = formData.get('file') as File;
-      
-      if (!file) {
-        return new Response(
-          JSON.stringify({ error: 'No file uploaded' }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      
-      const fileData = { name: file.name, size: file.size, type: file.type };
-      const processedData = await processFileContent(fileData);
-      await trainAIModel(processedData);
-      
+    // Get the OpenAI API key from environment variable
+    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+    if (!openAIApiKey) {
       return new Response(
-        JSON.stringify({ success: true, fileData, extractedData: processedData }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'OpenAI API key not configured' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    
-    else if (path === 'email-quotes' && req.method === 'POST') {
-      const start = performance.now();
-      const data = await req.json();
-      const response = await automateEmailQuotes(data);
-      const end = performance.now();
-      
-      emailProcessingTimes.push(end - start);
-      
+
+    // Get the request body
+    const data: RequestData = await req.json();
+    const { message, userId, language = 'en' } = data;
+
+    if (!message) {
       return new Response(
-        JSON.stringify({ success: true, data: response, processingTime: end - start }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Message is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    
-    else if (path === 'email-quotes-stats' && req.method === 'GET') {
-      const averageTime = emailProcessingTimes.length > 0
-        ? emailProcessingTimes.reduce((a, b) => a + b, 0) / emailProcessingTimes.length
-        : 0;
-        
+
+    console.log(`Processing dispatch message from user ${userId}: ${message} in language: ${language}`);
+
+    // Create a Supabase client for database operations
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+    const supabase = createSupabaseClient(supabaseUrl, supabaseKey);
+
+    // Store the user message in the database
+    const { error: insertError } = await supabase
+      .from('chat_messages')
+      .insert({
+        user_id: userId,
+        content: message,
+        role: 'user',
+      });
+
+    if (insertError) {
+      console.error('Error storing user message:', insertError);
+    }
+
+    // Prepare system message depending on language
+    let systemPrompt = '';
+    switch(language) {
+      case 'es':
+        systemPrompt = 'Eres un asistente de despacho de IA para un servicio de transporte. Ayudas a los usuarios a reservar viajes, verificar el estado de los viajes y responder preguntas. Mantén las respuestas concisas y útiles. Responde en español.';
+        break;
+      case 'fr':
+        systemPrompt = 'Vous êtes un assistant de répartition IA pour un service de transport. Vous aidez les utilisateurs à réserver des trajets, à vérifier l\'état des trajets et à répondre aux questions. Gardez les réponses concises et utiles. Répondez en français.';
+        break;
+      case 'de':
+        systemPrompt = 'Sie sind ein KI-Versandassistent für einen Transportdienst. Sie helfen Benutzern bei der Buchung von Fahrten, der Überprüfung des Fahrstatus und der Beantwortung von Fragen. Halten Sie die Antworten prägnant und hilfreich. Antworten Sie auf Deutsch.';
+        break;
+      default: // English
+        systemPrompt = 'You are an AI dispatch assistant for a transportation service. You help users book rides, check ride status, and answer questions. Keep responses concise and helpful. Respond in English.';
+    }
+
+    // Call OpenAI API
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: message }
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('OpenAI API error:', errorData);
       return new Response(
-        JSON.stringify({ averageProcessingTime: averageTime.toFixed(2) }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Failed to get response from AI service' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    
-    else if (path === 'chat' && req.method === 'POST') {
-      const { message, language } = await req.json();
-      let response = await chatWithAI(message);
-      
-      if (language && language !== 'en') {
-        response = await translateMessage(response, language);
-      }
-      
-      return new Response(
-        JSON.stringify({ reply: response }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+
+    const result = await response.json();
+    const reply = result.choices[0].message.content;
+
+    // Store the assistant's reply in the database
+    const { error: replyError } = await supabase
+      .from('chat_messages')
+      .insert({
+        user_id: userId,
+        content: reply,
+        role: 'assistant',
+      });
+
+    if (replyError) {
+      console.error('Error storing assistant reply:', replyError);
     }
-    
-    else if (path === 'voice' && req.method === 'POST') {
-      const { audioData } = await req.json();
-      const response = await processVoice(audioData);
-      
-      return new Response(
-        JSON.stringify({ text: response }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-    
-    else if (path === 'hubspot' && req.method === 'GET') {
-      const data = await fetchHubSpotData();
-      
-      return new Response(
-        JSON.stringify(data),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-    
+
     return new Response(
-      JSON.stringify({ error: 'Not found' }),
-      { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ reply }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
-    
   } catch (error) {
-    console.error('Error in AI Dispatch function:', error);
-    
+    console.error('Error processing request:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: 'An unexpected error occurred' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });
+
+// Helper function to create a Supabase client
+function createSupabaseClient(supabaseUrl: string, supabaseKey: string) {
+  const headers = {
+    'apikey': supabaseKey,
+    'Authorization': `Bearer ${supabaseKey}`,
+    'Content-Type': 'application/json',
+  };
+  
+  return {
+    from: (table: string) => ({
+      insert: async (data: any) => {
+        try {
+          const response = await fetch(`${supabaseUrl}/rest/v1/${table}`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data),
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            return { error: errorData };
+          }
+          
+          return { data: await response.json(), error: null };
+        } catch (error) {
+          return { error };
+        }
+      },
+      select: (columns: string) => ({
+        eq: async (column: string, value: any) => {
+          try {
+            const response = await fetch(
+              `${supabaseUrl}/rest/v1/${table}?select=${columns}&${column}=eq.${value}`,
+              { headers }
+            );
+            
+            if (!response.ok) {
+              const errorData = await response.json();
+              return { error: errorData };
+            }
+            
+            return { data: await response.json(), error: null };
+          } catch (error) {
+            return { error };
+          }
+        }
+      })
+    })
+  };
+}
