@@ -15,19 +15,20 @@ export const CTASection = () => {
             Join hundreds of businesses that have transformed their workflows.
           </p>
         </div>
-        <div className="flex gap-3 items-center mt-6 md:justify-center">
+        <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4 mt-6">
           <Link to="/auth">
             <Button 
-              variant="default" 
-              className="bg-gray-800 hover:bg-gray-700 active:bg-gray-900 shadow-md hover:shadow-none"
+              size="lg"
+              className="w-full md:w-auto bg-purple-600 text-white hover:bg-purple-700 shadow-md hover:shadow-none"
             >
               Get started
             </Button>
           </Link>
           <Link to="/pricing">
             <Button 
+              size="lg"
               variant="outline" 
-              className="text-gray-800 border hover:bg-gray-50 active:bg-gray-100"
+              className="w-full md:w-auto text-purple-600 border-purple-600 bg-transparent hover:bg-purple-50"
             >
               Learn more
             </Button>
