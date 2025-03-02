@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -76,11 +77,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single();
 
       if (error) throw error;
-      setProfile(data as Profile);
       
-      // Check if user is an admin (this could be based on a column in the profiles table)
-      // For this example, we'll check for an is_admin column
-      setIsAdmin(data?.is_admin === true);
+      // Make sure we handle the case where is_admin doesn't exist in the DB yet
+      const profileWithAdmin = {
+        ...data,
+        is_admin: data.is_admin === true
+      } as Profile;
+      
+      setProfile(profileWithAdmin);
+      setIsAdmin(profileWithAdmin.is_admin === true);
     } catch (error: any) {
       console.error("Error fetching profile:", error.message);
     }

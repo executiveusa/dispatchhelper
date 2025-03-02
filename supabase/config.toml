@@ -1,1 +1,19 @@
-project_id = "zqykgdpyfryweqtbqrdl"
+
+project_id = "your-project-id"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+
+[db]
+port = 54322
+
+[studio]
+port = 54323
+
+[functions]
+[functions.ai-chat]
+verify_jwt = false
+[functions.ai-dispatch]
+verify_jwt = false

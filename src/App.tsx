@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import Dispatch from "./pages/Dispatch";
 import Pricing from "./pages/Pricing";
 import ChatPage from "./pages/ChatPage";
+import AiDispatch from "./pages/AiDispatch";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/dispatch" element={<Dispatch />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/chat" element={<ChatPage />} />
+            <Route path="/ai-dispatch" element={<AiDispatch />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
