@@ -13,6 +13,7 @@ interface BookingData {
   dropoff_location: string;
   status: string;
   pickup_time: string;
+  user_email?: string; // Add the user_email property that comes from the join
 }
 
 export const AdminDashboard = () => {

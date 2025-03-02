@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -12,7 +11,7 @@ interface Profile {
   last_name: string | null;
   phone: string | null;
   updated_at: string;
-  is_admin?: boolean; // Add this property as optional
+  is_admin: boolean; // Changed from optional to required property
 }
 
 interface AuthContextProps {
