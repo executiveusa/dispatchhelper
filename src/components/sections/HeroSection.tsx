@@ -16,7 +16,7 @@ export const HeroSection = () => {
 
   useEffect(() => {
     document.onclick = (e) => {
-      const target = e.target;
+      const target = e.target as HTMLElement;
       if (!target.closest(".menu-btn")) setMenuOpen(false);
     };
   }, []);
