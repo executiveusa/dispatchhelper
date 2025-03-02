@@ -3,201 +3,115 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/context/AuthContext";
-import LoadingSpinnerIcon from "@/components/LoadingSpinnerIcon";
+import { toast } from "sonner";
 
 interface ChatMessage {
   id: string;
+  created_at: string;
   user_id: string;
   content: string;
-  role: string;
-  created_at: string;
-  email?: string;
+  is_from_user: boolean;
+  user_email?: string;
 }
 
-const AdminDashboard: React.FC = () => {
+export const AdminDashboard = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchChatMessages();
+  }, []);
 
   const fetchChatMessages = async () => {
-    setIsLoading(true);
     try {
-      // Use Supabase's RPC function to get the view data
+      setLoading(true);
       const { data, error } = await supabase
-        .rpc('get_admin_chat_messages')
-        .order('created_at', { ascending: false })
-        .limit(100);
+        .from('chat_messages')
+        .select('*, profiles:user_id(email)')
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
-      
-      // Type assertion to ensure the data matches our ChatMessage interface
-      setMessages(data as ChatMessage[]);
+
+      // Transform the data to include user_email from the joined profiles table
+      const transformedData = data.map((message: any) => ({
+        ...message,
+        user_email: message.profiles?.email || 'Unknown User',
+      }));
+
+      setMessages(transformedData);
     } catch (error: any) {
-      console.error("Error fetching messages:", error);
-      setError("Failed to load chat messages");
+      console.error('Error fetching chat messages:', error);
+      toast.error('Failed to load chat messages');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    // Only fetch if the user is logged in (and presumably an admin)
-    if (user) {
-      fetchChatMessages();
-      
-      // Set up real-time subscription
-      const subscription = supabase
-        .channel("admin_chat_messages")
-        .on(
-          "postgres_changes",
-          { event: "*", schema: "public", table: "chat_messages" },
-          (payload) => {
-            // Refresh the messages when there's a change
-            fetchChatMessages();
-          }
-        )
-        .subscribe();
-
-      return () => {
-        subscription.unsubscribe();
-      };
-    }
-  }, [user]);
-
-  const userMessages = messages.filter(
-    (message) => message.role === "user"
-  ).length;
-  
-  const assistantMessages = messages.filter(
-    (message) => message.role === "assistant"
-  ).length;
-
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Admin Dashboard</h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>Total Messages</CardTitle>
-            <CardDescription>All chat interactions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{messages.length}</p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>User Messages</CardTitle>
-            <CardDescription>Messages from users</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{userMessages}</p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>AI Responses</CardTitle>
-            <CardDescription>Messages from assistant</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{assistantMessages}</p>
-          </CardContent>
-        </Card>
-      </div>
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
 
-      <Tabs defaultValue="all" className="w-full">
+      <Tabs defaultValue="messages">
         <TabsList>
-          <TabsTrigger value="all">All Messages</TabsTrigger>
-          <TabsTrigger value="user">User Messages</TabsTrigger>
-          <TabsTrigger value="assistant">AI Responses</TabsTrigger>
+          <TabsTrigger value="messages">Chat Messages</TabsTrigger>
+          <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
-        
-        <TabsContent value="all" className="border rounded-md p-4">
-          {isLoading ? (
-            <div className="flex justify-center py-8">
-              <LoadingSpinnerIcon className="w-8 h-8" />
-            </div>
-          ) : error ? (
-            <p className="text-destructive text-center py-4">{error}</p>
-          ) : (
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <div key={message.id} className="border-b pb-2">
-                  <div className="flex justify-between">
-                    <span className="font-medium">
-                      {message.role === "user" ? message.email || "User" : "AI Assistant"}
-                    </span>
-                    <span className="text-sm text-muted-foreground">
-                      {new Date(message.created_at).toLocaleString()}
-                    </span>
-                  </div>
-                  <p className="mt-1">{message.content}</p>
+        <TabsContent value="messages" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Chat Messages</CardTitle>
+              <CardDescription>View all chat interactions between users and the AI</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <p>Loading messages...</p>
+              ) : messages.length === 0 ? (
+                <p>No chat messages found.</p>
+              ) : (
+                <div className="space-y-4">
+                  {messages.map((message) => (
+                    <div key={message.id} className="p-4 border rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-medium">{message.user_email}</p>
+                          <p className="text-sm text-gray-500">
+                            {new Date(message.created_at).toLocaleString()}
+                          </p>
+                        </div>
+                        <span className={`px-2 py-1 text-xs rounded-full ${message.is_from_user ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
+                          {message.is_from_user ? 'User' : 'AI'}
+                        </span>
+                      </div>
+                      <p className="mt-2">{message.content}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-              {messages.length === 0 && (
-                <p className="text-center py-4 text-muted-foreground">No messages found</p>
               )}
-            </div>
-          )}
+            </CardContent>
+          </Card>
         </TabsContent>
-        
-        <TabsContent value="user" className="border rounded-md p-4">
-          {isLoading ? (
-            <div className="flex justify-center py-8">
-              <LoadingSpinnerIcon className="w-8 h-8" />
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {messages
-                .filter((message) => message.role === "user")
-                .map((message) => (
-                  <div key={message.id} className="border-b pb-2">
-                    <div className="flex justify-between">
-                      <span className="font-medium">{message.email || "User"}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(message.created_at).toLocaleString()}
-                      </span>
-                    </div>
-                    <p className="mt-1">{message.content}</p>
-                  </div>
-                ))}
-              {messages.filter((message) => message.role === "user").length === 0 && (
-                <p className="text-center py-4 text-muted-foreground">No user messages found</p>
-              )}
-            </div>
-          )}
+        <TabsContent value="users">
+          <Card>
+            <CardHeader>
+              <CardTitle>User Management</CardTitle>
+              <CardDescription>Manage user accounts and permissions</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>User management interface will be implemented here.</p>
+            </CardContent>
+          </Card>
         </TabsContent>
-        
-        <TabsContent value="assistant" className="border rounded-md p-4">
-          {isLoading ? (
-            <div className="flex justify-center py-8">
-              <LoadingSpinnerIcon className="w-8 h-8" />
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {messages
-                .filter((message) => message.role === "assistant")
-                .map((message) => (
-                  <div key={message.id} className="border-b pb-2">
-                    <div className="flex justify-between">
-                      <span className="font-medium">AI Assistant</span>
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(message.created_at).toLocaleString()}
-                      </span>
-                    </div>
-                    <p className="mt-1">{message.content}</p>
-                  </div>
-                ))}
-              {messages.filter((message) => message.role === "assistant").length === 0 && (
-                <p className="text-center py-4 text-muted-foreground">No AI responses found</p>
-              )}
-            </div>
-          )}
+        <TabsContent value="analytics">
+          <Card>
+            <CardHeader>
+              <CardTitle>Analytics Dashboard</CardTitle>
+              <CardDescription>View usage statistics and trends</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>Analytics dashboard will be implemented here.</p>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

@@ -3,12 +3,24 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 
+// Define the profile type with is_admin property
+interface Profile {
+  id: string;
+  created_at: string;
+  email: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  phone: string | null;
+  updated_at: string;
+  is_admin?: boolean; // Add this property as optional
+}
+
 interface AuthContextProps {
   user: any | null;
-  profile: any | null;
+  profile: Profile | null;
   signOut: () => Promise<void>;
   loading: boolean;
-  isAdmin: boolean; // Add isAdmin property
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -16,14 +28,14 @@ const AuthContext = createContext<AuthContextProps>({
   profile: null,
   signOut: async () => {},
   loading: true,
-  isAdmin: false, // Default isAdmin to false
+  isAdmin: false,
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<any | null>(null);
-  const [profile, setProfile] = useState<any | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false); // Add isAdmin state
+  const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -65,7 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single();
 
       if (error) throw error;
-      setProfile(data);
+      setProfile(data as Profile);
       
       // Check if user is an admin (this could be based on a column in the profiles table)
       // For this example, we'll check for an is_admin column
