@@ -28,11 +28,11 @@ export const HeroSection = () => {
       
       <div className="container mx-auto text-center relative z-10">
         <h1 className="text-5xl md:text-7xl font-mono font-bold mb-6 text-blue-600">
-          DISPATCH AI
+          AI-POWERED DISPATCH
         </h1>
         <p className="text-xl md:text-2xl max-w-2xl mx-auto mb-8 text-gray-700">
-          The intelligent SaaS platform for optimizing your business operations.
-          Streamline workflows, automate tasks, and drive efficiency.
+          Streamline email handling, automate quote responses, and optimize your 
+          dispatch process with our cutting-edge AI technology.
         </p>
         <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
           <Link to="/auth">
@@ -40,9 +40,9 @@ export const HeroSection = () => {
               Start Free Trial
             </Button>
           </Link>
-          <Link to="/pricing">
+          <Link to="/ai-dispatch">
             <Button size="lg" variant="outline" className="text-blue-600 border-blue-600 bg-transparent hover:bg-blue-50">
-              View Pricing
+              Try AI Dispatch
             </Button>
           </Link>
         </div>
