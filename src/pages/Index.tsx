@@ -8,6 +8,7 @@ import { TeamSection } from "@/components/sections/TeamSection";
 import { AISection } from "@/components/sections/AISection";
 import { CTASection } from "@/components/sections/CTASection";
 import { SaaSFooter } from "@/components/sections/SaaSFooter";
+import AIDispatchSection from "@/components/sections/AIDispatchSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -19,6 +20,7 @@ const Index = () => {
       <FeaturesSection />
       <ClientSection />
       <IntegrationSection />
+      <AIDispatchSection />
       <CTASection />
       <TeamSection />
       <AISection />
