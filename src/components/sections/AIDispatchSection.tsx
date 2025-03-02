@@ -19,7 +19,7 @@ const AIDispatchSection = () => {
           </div>
           
           <div className="flex flex-wrap justify-center gap-2 mb-4 md:mb-0">
-            <div className="px-3 py-2 rounded-2xl bg-white border border-[#CDD0D5]">
+            <div className="w-fit h-fit rounded-2xl flex items-center justify-center bg-white border border-[#CDD0D5] px-3 py-2">
               <span className="font-medium text-[#984422]">Home</span>
             </div>
             <div className="px-3 py-2">
@@ -57,19 +57,19 @@ const AIDispatchSection = () => {
           </p>
           <Button 
             onClick={() => setShowDemo(true)}
-            className="bg-[#984422] hover:bg-[#873d1d] border-[#6A270B] gap-2 rounded-xl"
+            className="bg-[#984422] hover:bg-[#873d1d] border-[#6A270B] gap-2 rounded-xl shadow-md"
           >
-            <PlayCircle className="w-5 h-5" />
-            Watch Demo
+            <PlayCircle className="w-5 h-5 text-white" />
+            <span className="text-lg font-medium text-white">Watch Demo</span>
           </Button>
         </div>
         
         {showDemo && (
           <div className="flex justify-center mt-10">
             <iframe
-              width="100%"
+              width="800"
               height="450"
-              className="max-w-4xl rounded-lg shadow-lg"
+              className="rounded-lg shadow-lg"
               src="https://www.youtube.com/embed/dQw4w9WgXcQ" // Replace with your actual video ID
               title="AI Dispatch System Demo"
               frameBorder="0"
@@ -81,7 +81,7 @@ const AIDispatchSection = () => {
         
         <div className="mt-12 text-center">
           <Link to="/ai-dispatch">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl">
               Try AI Dispatch Now
             </Button>
           </Link>
