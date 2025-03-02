@@ -1,9 +1,7 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
-import PricingCard from "@/components/PricingCard";
+import TriplePricingCards from "@/components/TriplePricingCards";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -31,7 +29,7 @@ const Pricing = () => {
       
       {/* Pricing Cards */}
       <section className="py-12">
-        <PricingCard />
+        <TriplePricingCards />
       </section>
       
       {/* FAQs Section */}
