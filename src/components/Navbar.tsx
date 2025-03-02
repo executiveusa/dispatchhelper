@@ -9,7 +9,12 @@ const Navbar = () => {
   
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: "smooth" });
+    if (element) {
+      element?.scrollIntoView({ behavior: "smooth" });
+    } else if (window.location.pathname !== '/') {
+      // If we're not on the home page, navigate to home and then scroll
+      window.location.href = `/#${id}`;
+    }
   };
 
   return (

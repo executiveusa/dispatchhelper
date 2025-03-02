@@ -15,12 +15,20 @@ const Index = () => {
     <div className="min-h-screen bg-white">
       <Navbar />
       <HeroSection />
-      <FeaturesSection />
-      <ClientSection />
-      <IntegrationSection />
+      <div id="features">
+        <FeaturesSection />
+      </div>
+      <div id="community">
+        <ClientSection />
+      </div>
+      <div id="integrate">
+        <IntegrationSection />
+      </div>
       <AIDispatchSection />
       <CTASection />
-      <TeamSection />
+      <div id="team">
+        <TeamSection />
+      </div>
       <AISection />
       <SaaSFooter />
     </div>

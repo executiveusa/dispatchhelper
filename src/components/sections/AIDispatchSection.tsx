@@ -8,7 +8,7 @@ const AIDispatchSection = () => {
   const [showDemo, setShowDemo] = useState(false);
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white" id="ai-dispatch">
       <div className="container mx-auto px-4">
         <div className="bg-[#FBFAFA] flex flex-col md:flex-row rounded-3xl border border-[#CDD0D5] p-4 md:p-6 items-center justify-between mb-12">
           <div className="flex items-center gap-x-2 mb-4 md:mb-0">
@@ -19,32 +19,34 @@ const AIDispatchSection = () => {
           </div>
           
           <div className="flex flex-wrap justify-center gap-2 mb-4 md:mb-0">
-            <div className="w-fit h-fit rounded-2xl flex items-center justify-center bg-white border border-[#CDD0D5] px-3 py-2">
+            <Link to="/" className="w-fit h-fit rounded-2xl flex items-center justify-center bg-white border border-[#CDD0D5] px-3 py-2">
               <span className="font-medium text-[#984422]">Home</span>
-            </div>
-            <div className="px-3 py-2">
+            </Link>
+            <Link to="/" className="px-3 py-2">
               <span className="text-[#525866] font-medium">About Us</span>
-            </div>
-            <div className="px-3 py-2">
+            </Link>
+            <Link to="/pricing" className="px-3 py-2">
               <span className="text-[#525866] font-medium">Features</span>
-            </div>
-            <div className="px-3 py-2">
+            </Link>
+            <Link to="/ai-dispatch" className="px-3 py-2">
               <span className="text-[#525866] font-medium">Use Cases</span>
-            </div>
+            </Link>
             <div className="px-3 py-2 cursor-pointer" onClick={() => setShowDemo(true)}>
               <span className="text-[#525866] font-medium">Demo</span>
             </div>
-            <div className="px-3 py-2">
+            <Link to="/pricing" className="px-3 py-2">
               <span className="text-[#525866] font-medium">Pricing</span>
-            </div>
+            </Link>
           </div>
           
           <div className="flex items-center gap-4">
-            <div className="font-medium">Login</div>
-            <Button variant="outline" className="gap-1 rounded-xl">
-              Get Started
-              <ArrowRight className="w-4 h-4" />
-            </Button>
+            <Link to="/auth" className="font-medium">Login</Link>
+            <Link to="/auth">
+              <Button variant="outline" className="gap-1 rounded-xl">
+                Get Started
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
         </div>
 

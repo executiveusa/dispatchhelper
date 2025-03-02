@@ -8,9 +8,9 @@ export const HeroSection = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navigation = [
-    { title: "Features", path: "/features" },
-    { title: "Integrations", path: "/integrations" },
-    { title: "Customers", path: "/customers" },
+    { title: "Features", path: "/pricing" },
+    { title: "Integrations", path: "/ai-dispatch" },
+    { title: "Customers", path: "/pricing" },
     { title: "Pricing", path: "/pricing" },
   ];
 
