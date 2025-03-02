@@ -43,7 +43,7 @@ export const useDispatchOperations = () => {
       if (error) throw error;
       
       // Transform bookings to dispatch requests format
-      const dispatchRequests: DispatchRequest[] = (data || []).map((booking: Booking) => ({
+      const dispatchRequests: DispatchRequest[] = (data || []).map((booking: any) => ({
         id: booking.id,
         created_at: booking.created_at,
         status: booking.status,
