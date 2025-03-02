@@ -35,21 +35,34 @@ export const AISection = () => {
         body: { message: input, userId: "demo-user" },
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error calling AI function:", error);
+        throw error;
+      }
       
       // Add AI response to chat
       setMessages(prev => [
         ...prev,
         {
           role: "assistant" as const,
-          content: data.reply || "Sorry, I couldn't process that request.",
+          content: data?.reply || "Sorry, I couldn't process that request.",
         },
       ]);
     } catch (error) {
       console.error("Error calling AI function:", error);
+      
+      // Add fallback response when the API call fails
+      setMessages(prev => [
+        ...prev,
+        {
+          role: "assistant" as const,
+          content: "I'm currently experiencing technical difficulties. Please try again later or contact support if this persists.",
+        },
+      ]);
+      
       toast({
-        title: "Error",
-        description: "Failed to get a response. Please try again.",
+        title: "Communication Error",
+        description: "Could not connect to the AI service. Please try again later.",
         variant: "destructive",
       });
     } finally {

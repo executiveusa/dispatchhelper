@@ -23,9 +23,12 @@ serve(async (req) => {
     // Get the OpenAI API key from environment variable
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIApiKey) {
+      console.error("OpenAI API key not configured");
       return new Response(
-        JSON.stringify({ error: 'OpenAI API key not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ 
+          reply: "I'm sorry, but I'm not properly configured yet. Please contact support to set up the AI assistant." 
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -41,24 +44,6 @@ serve(async (req) => {
     }
 
     console.log(`Processing message from user ${userId}: ${message} in language: ${language}`);
-
-    // Create a Supabase client for database operations
-    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-    const supabase = createSupabaseClient(supabaseUrl, supabaseKey);
-
-    // Store the user message in the database
-    const { error: insertError } = await supabase
-      .from('chat_messages')
-      .insert({
-        user_id: userId,
-        content: message,
-        role: 'user',
-      });
-
-    if (insertError) {
-      console.error('Error storing user message:', insertError);
-    }
 
     // Call OpenAI API
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -85,26 +70,15 @@ serve(async (req) => {
       const errorData = await response.json();
       console.error('OpenAI API error:', errorData);
       return new Response(
-        JSON.stringify({ error: 'Failed to get response from AI service' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ 
+          reply: "I'm having trouble connecting to my AI service. Please try again later."
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     const result = await response.json();
     const reply = result.choices[0].message.content;
-
-    // Store the assistant's reply in the database
-    const { error: replyError } = await supabase
-      .from('chat_messages')
-      .insert({
-        user_id: userId,
-        content: reply,
-        role: 'assistant',
-      });
-
-    if (replyError) {
-      console.error('Error storing assistant reply:', replyError);
-    }
 
     return new Response(
       JSON.stringify({ reply }),
@@ -113,59 +87,10 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error processing request:', error);
     return new Response(
-      JSON.stringify({ error: 'An unexpected error occurred' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ 
+        reply: "I've encountered an error. Please try again or contact support if the issue persists."
+      }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });
-
-// Helper function to create a Supabase client
-function createSupabaseClient(supabaseUrl: string, supabaseKey: string) {
-  const headers = {
-    'apikey': supabaseKey,
-    'Authorization': `Bearer ${supabaseKey}`,
-    'Content-Type': 'application/json',
-  };
-  
-  return {
-    from: (table: string) => ({
-      insert: async (data: any) => {
-        try {
-          const response = await fetch(`${supabaseUrl}/rest/v1/${table}`, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(data),
-          });
-          
-          if (!response.ok) {
-            const errorData = await response.json();
-            return { error: errorData };
-          }
-          
-          return { data: await response.json(), error: null };
-        } catch (error) {
-          return { error };
-        }
-      },
-      select: (columns: string) => ({
-        eq: async (column: string, value: any) => {
-          try {
-            const response = await fetch(
-              `${supabaseUrl}/rest/v1/${table}?select=${columns}&${column}=eq.${value}`,
-              { headers }
-            );
-            
-            if (!response.ok) {
-              const errorData = await response.json();
-              return { error: errorData };
-            }
-            
-            return { data: await response.json(), error: null };
-          } catch (error) {
-            return { error };
-          }
-        }
-      })
-    })
-  };
-}

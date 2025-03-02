@@ -63,7 +63,10 @@ const ChatbotComponent: React.FC = () => {
         body: { message: input, userId: user?.id || "anonymous" },
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error calling AI function:", error);
+        throw error;
+      }
       
       // Add AI response to chat
       setMessages((prev) => [
@@ -71,15 +74,27 @@ const ChatbotComponent: React.FC = () => {
         {
           id: Date.now().toString(),
           role: "assistant",
-          content: data.reply || "Sorry, I couldn't process that request.",
+          content: data?.reply || "Sorry, I couldn't process that request.",
           timestamp: new Date(),
         },
       ]);
     } catch (error) {
       console.error("Error calling AI function:", error);
+      
+      // Add fallback response when the API call fails
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          role: "assistant",
+          content: "I'm currently experiencing technical difficulties. Please try again later or contact support if this persists.",
+          timestamp: new Date(),
+        },
+      ]);
+      
       toast({
-        title: "Error",
-        description: "Failed to get a response. Please try again.",
+        title: "Communication Error",
+        description: "Could not connect to the AI service. Please try again later.",
         variant: "destructive",
       });
     } finally {

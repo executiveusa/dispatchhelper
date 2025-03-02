@@ -68,7 +68,7 @@ const EnhancedChatbot: React.FC = () => {
     setIsLoading(true);
     
     try {
-      // Call the new AI dispatch chat function
+      // Call the AI dispatch chat function
       const { data, error } = await supabase.functions.invoke('ai-dispatch', {
         body: { 
           message: input, 
@@ -77,7 +77,10 @@ const EnhancedChatbot: React.FC = () => {
         },
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error calling AI dispatch function:", error);
+        throw error;
+      }
       
       // Add AI response to chat
       setMessages((prev) => [
@@ -91,9 +94,21 @@ const EnhancedChatbot: React.FC = () => {
       ]);
     } catch (error) {
       console.error("Error calling AI dispatch function:", error);
+      
+      // Add fallback response when the API call fails
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          role: "assistant",
+          content: "I'm currently experiencing technical difficulties. Please try again later or contact support if this persists.",
+          timestamp: new Date(),
+        },
+      ]);
+      
       toast({
-        title: "Error",
-        description: "Failed to get a response. Please try again.",
+        title: "Communication Error",
+        description: "Could not connect to the AI dispatch service. Please try again later.",
         variant: "destructive",
       });
     } finally {
