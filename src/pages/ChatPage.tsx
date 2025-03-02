@@ -11,14 +11,14 @@ const ChatPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-6">AI Dispatch Assistant</h1>
+      <div className="container mx-auto pt-28 py-8 px-4">
+        <h1 className="text-3xl font-bold mb-6">AI Assistant</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
             <h2 className="text-xl font-semibold mb-4">Chat with our AI Assistant</h2>
             <p className="text-muted-foreground mb-6">
-              Ask questions about bookings, schedules, or get help with your transportation needs.
+              Ask questions about your account, get help with our platform, or learn about new features.
             </p>
             <ChatbotComponent />
           </div>
@@ -35,15 +35,15 @@ const ChatPage: React.FC = () => {
               <ul className="space-y-2">
                 <li className="flex items-start">
                   <span className="bg-primary/10 text-primary rounded-full p-1 mr-2">✓</span>
-                  <span>Book transportation with natural language</span>
+                  <span>Ask questions about your account</span>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary/10 text-primary rounded-full p-1 mr-2">✓</span>
-                  <span>Check status of your bookings</span>
+                  <span>Get help with platform features</span>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary/10 text-primary rounded-full p-1 mr-2">✓</span>
-                  <span>Cancel or modify existing reservations</span>
+                  <span>Request support for specific issues</span>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary/10 text-primary rounded-full p-1 mr-2">✓</span>
@@ -51,7 +51,7 @@ const ChatPage: React.FC = () => {
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary/10 text-primary rounded-full p-1 mr-2">✓</span>
-                  <span>Get support and answers to common questions</span>
+                  <span>Get answers to common questions</span>
                 </li>
               </ul>
             </div>

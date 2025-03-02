@@ -25,12 +25,12 @@ export default function Dispatch() {
       <Navbar />
       <div className="container pt-28 pb-16 px-4">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-blue-600 font-mono">DISPATCH HELPER</h1>
-          <p className="text-gray-600 mt-2">AI-Powered Dispatch System for Luxury Transportation</p>
+          <h1 className="text-3xl font-bold text-blue-600 font-mono">MANAGEMENT DASHBOARD</h1>
+          <p className="text-gray-600 mt-2">AI-Powered Management System</p>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Dispatch Requests List */}
+          {/* Request List */}
           <RequestList 
             requests={requests}
             loading={loading}
@@ -38,12 +38,12 @@ export default function Dispatch() {
             onSelectRequest={handleSelectRequest}
           />
 
-          {/* Driver Assignment Panel */}
+          {/* Assignment Panel */}
           <div className="space-y-6">
             {/* Selected Request Details */}
             <RequestDetails selectedRequest={selectedRequest} />
             
-            {/* Driver Assignment */}
+            {/* Assignment */}
             <DriverAssignment
               selectedRequest={selectedRequest}
               selectedDriver={selectedDriver}
@@ -53,7 +53,7 @@ export default function Dispatch() {
               onAssignDriver={handleAssignDriver}
             />
             
-            {/* Available Drivers */}
+            {/* Available Resources */}
             <DriverList drivers={drivers} />
           </div>
         </div>
