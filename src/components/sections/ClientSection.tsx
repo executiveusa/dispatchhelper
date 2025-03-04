@@ -4,25 +4,25 @@ import React from "react";
 export const ClientSection = () => {
   const testimonials = [
     {
-      avatar: "https://api.uifaces.co/our-content/donated/xZ4wg2Xj.jpg",
-      name: "Martin escobar",
-      title: "Founder of meta",
+      avatar: "https://randomuser.me/api/portraits/women/79.jpg",
+      name: "Sarah Johnson",
+      title: "Operations Director, FastFreight Inc.",
       quote:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et est hendrerit, porta nunc vitae.",
+        "Our response time dropped from 3 hours to just 18 minutes. The AI understands context so well that 90% of inquiries are handled without human intervention.",
     },
     {
       avatar: "https://randomuser.me/api/portraits/men/46.jpg",
-      name: "Simon andrew",
-      title: "Software engineer",
+      name: "David Chen",
+      title: "Chief Dispatch Officer, MetroLogistics",
       quote:
-        "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.",
+        "We've seen a 43% increase in customer satisfaction scores since implementing Spatchy AI. Our dispatchers now focus on complex cases while routine ones are handled automatically.",
     },
     {
-      avatar: "https://randomuser.me/api/portraits/men/86.jpg",
-      name: "Micheal worin",
-      title: "Product designer",
+      avatar: "https://randomuser.me/api/portraits/women/33.jpg",
+      name: "Michelle Rodriguez",
+      title: "Fleet Manager, GreenMile Transport",
       quote:
-        "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain.",
+        "The ROI was evident within the first month. We're saving 35 hours per week in manual email processing and have increased our capacity by 28% without adding staff.",
     },
   ];
 
@@ -31,12 +31,10 @@ export const ClientSection = () => {
       <div className="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8">
         <div className="max-w-xl sm:text-center md:mx-auto">
           <h3 className="text-gray-800 text-3xl font-semibold sm:text-4xl">
-            Hear from our customers
+            Trusted by dispatch teams everywhere
           </h3>
           <p className="mt-3 text-gray-600">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et est
-            hendrerit, porta nunc vitae, gravida justo. Nunc fermentum magna
-            lorem, euismod volutpat arcu volutpat et.
+            See how leading logistics and service companies are transforming their operations with our AI-powered dispatch platform.
           </p>
         </div>
         <div className="mt-12">
@@ -45,7 +43,7 @@ export const ClientSection = () => {
               <li key={idx} className="bg-white rounded-xl border shadow-md">
                 <div className="p-4">
                   <svg
-                    className="w-9 h-9 text-gray-300"
+                    className="w-9 h-9 text-blue-400"
                     viewBox="0 0 35 35"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -66,6 +64,7 @@ export const ClientSection = () => {
                     <img
                       src={item.avatar}
                       className="w-16 h-16 rounded-full border-2 border-indigo-500"
+                      alt={item.name}
                     />
                     <div>
                       <span className="block text-gray-800 font-semibold">

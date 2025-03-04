@@ -9,27 +9,27 @@ export const IntegrationSection = () => {
           <div>
             <h2 className="text-3xl font-mono font-bold mb-6 text-blue-600">/AI POWERED</h2>
             <p className="text-lg text-blue-600/80 mb-8">
-              Our proprietary AI system learns your workflows and processes over time, anticipating your needs and automating repetitive tasks without any manual configuration.
+              Our proprietary AI system doesn't just automate—it learns your business. It adapts to your workflows, anticipates customer needs, and improves with every interaction.
             </p>
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                <p className="text-blue-600">Intelligent workflow suggestions</p>
+                <p className="text-blue-600">Adaptive response suggestions based on your history</p>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                <p className="text-blue-600">Automated data analysis</p>
+                <p className="text-blue-600">Smart dispatch prioritization by urgency and value</p>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                <p className="text-blue-600">Real-time anomaly detection</p>
+                <p className="text-blue-600">Predictive analytics for resource allocation</p>
               </div>
             </div>
           </div>
           <div className="relative rounded-lg overflow-hidden shadow-xl">
             <img
-              src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952"
-              alt="AI-powered analytics dashboard"
+              src="https://images.unsplash.com/photo-1519389950473-47ba0277781c"
+              alt="Team using AI dispatch system"
               className="rounded-lg"
             />
           </div>

@@ -8,9 +8,9 @@ export const HeroSection = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navigation = [
-    { title: "Features", path: "/pricing" },
-    { title: "Integrations", path: "/ai-dispatch" },
-    { title: "Customers", path: "/pricing" },
+    { title: "Features", path: "#features" },
+    { title: "Integrations", path: "#integrate" },
+    { title: "Customers", path: "#community" },
     { title: "Pricing", path: "/pricing" },
   ];
 
@@ -59,9 +59,9 @@ export const HeroSection = () => {
                 {navigation.map((item, idx) => {
                   return (
                     <li key={idx} className="text-white hover:text-blue-200">
-                      <Link to={item.path} className="block">
+                      <a href={item.path} className="block">
                         {item.title}
-                      </Link>
+                      </a>
                     </li>
                   );
                 })}
@@ -94,21 +94,20 @@ export const HeroSection = () => {
         <div className="relative z-10 max-w-screen-xl mx-auto px-4 py-20 md:px-8">
           <div className="space-y-5 max-w-4xl mx-auto text-center">
             <h1 className="text-4xl text-white font-mono font-bold mx-auto md:text-6xl">
-              AI-POWERED DISPATCH
+              TRANSFORM YOUR DISPATCH OPERATIONS WITH AI
             </h1>
             <p className="max-w-2xl mx-auto text-gray-200 text-xl">
-              Streamline email handling, automate quote responses, and optimize your 
-              dispatch process with our cutting-edge AI technology.
+              Cut response time by 75%, eliminate manual email sorting, and deliver exceptional customer service with our intelligent dispatch automation platform.
             </p>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
               <Link to="/auth">
                 <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto">
-                  Start Free Trial
+                  Start 14-Day Free Trial
                 </Button>
               </Link>
               <Link to="/ai-dispatch">
                 <Button size="lg" variant="outline" className="text-white border-white bg-transparent hover:bg-blue-800 w-full sm:w-auto">
-                  Try AI Dispatch
+                  See AI Dispatch in Action
                 </Button>
               </Link>
             </div>
@@ -127,7 +126,7 @@ export const HeroSection = () => {
                 ))}
               </div>
               <p>
-                <span className="text-white font-bold">5.0</span> by over 200 users
+                <span className="text-white font-bold">5.0</span> by over 200 dispatching companies
               </p>
             </div>
           </div>

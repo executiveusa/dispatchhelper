@@ -22,15 +22,15 @@ const AIDispatchSection = () => {
             <Link to="/" className="w-fit h-fit rounded-2xl flex items-center justify-center bg-white border border-[#CDD0D5] px-3 py-2">
               <span className="font-medium text-[#984422]">Home</span>
             </Link>
-            <Link to="/" className="px-3 py-2">
+            <a href="#team" className="px-3 py-2">
               <span className="text-[#525866] font-medium">About Us</span>
-            </Link>
-            <Link to="/pricing" className="px-3 py-2">
+            </a>
+            <a href="#features" className="px-3 py-2">
               <span className="text-[#525866] font-medium">Features</span>
-            </Link>
-            <Link to="/ai-dispatch" className="px-3 py-2">
+            </a>
+            <a href="#community" className="px-3 py-2">
               <span className="text-[#525866] font-medium">Use Cases</span>
-            </Link>
+            </a>
             <div className="px-3 py-2 cursor-pointer" onClick={() => setShowDemo(true)}>
               <span className="text-[#525866] font-medium">Demo</span>
             </div>
@@ -52,17 +52,17 @@ const AIDispatchSection = () => {
 
         <div className="text-center max-w-4xl mx-auto mb-16">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            AI-Powered Dispatch Automation
+            Dispatch Automation That Actually Works
           </h1>
           <p className="text-xl text-[#525866] mb-8 max-w-2xl mx-auto">
-            Reduce workload, automate responses, and streamline dispatch operations with AI-driven solutions.
+            Our AI doesn't just handle emails—it understands customer intent, prioritizes urgent requests, and learns from your team's best practices.
           </p>
           <Button 
             onClick={() => setShowDemo(true)}
             className="bg-[#984422] hover:bg-[#873d1d] border-[#6A270B] gap-2 rounded-xl shadow-md"
           >
             <PlayCircle className="w-5 h-5 text-white" />
-            <span className="text-lg font-medium text-white">Watch Demo</span>
+            <span className="text-lg font-medium text-white">Watch 2-Minute Demo</span>
           </Button>
         </div>
         
@@ -84,7 +84,7 @@ const AIDispatchSection = () => {
         <div className="mt-12 text-center">
           <Link to="/ai-dispatch">
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl">
-              Try AI Dispatch Now
+              Book a Personalized Demo Today
             </Button>
           </Link>
         </div>
