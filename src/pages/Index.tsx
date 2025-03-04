@@ -9,6 +9,7 @@ import { AISection } from "@/components/sections/AISection";
 import { CTASection } from "@/components/sections/CTASection";
 import { SaaSFooter } from "@/components/sections/SaaSFooter";
 import AIDispatchSection from "@/components/sections/AIDispatchSection";
+import { Toaster } from "@/components/ui/toaster";
 
 const Index = () => {
   return (
@@ -24,13 +25,16 @@ const Index = () => {
       <div id="integrate">
         <IntegrationSection />
       </div>
-      <AIDispatchSection />
+      <div id="ai-dispatch">
+        <AIDispatchSection />
+      </div>
       <CTASection />
       <div id="team">
         <TeamSection />
       </div>
       <AISection />
       <SaaSFooter />
+      <Toaster />
     </div>
   );
 };

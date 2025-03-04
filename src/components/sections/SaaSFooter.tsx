@@ -1,7 +1,20 @@
 
 import { Link } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 export const SaaSFooter = () => {
+  const { toast } = useToast();
+
+  const handleExternalLink = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
+    e.preventDefault();
+    window.open(url, "_blank", "noopener,noreferrer");
+    toast({
+      title: "Opening external link",
+      description: `Navigating to ${url}`,
+      duration: 3000,
+    });
+  };
+
   return (
     <footer className="bg-gradient-to-r from-purple-50 to-indigo-50 py-12">
       <div className="container mx-auto">
@@ -17,20 +30,41 @@ export const SaaSFooter = () => {
           <div>
             <h4 className="font-semibold mb-4">Product</h4>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li><Link to="/pricing" className="hover:text-indigo-600 transition-colors">Features</Link></li>
+              <li><a href="#features" className="hover:text-indigo-600 transition-colors">Features</a></li>
               <li><Link to="/pricing" className="hover:text-indigo-600 transition-colors">Pricing</Link></li>
               <li><Link to="/ai-dispatch" className="hover:text-indigo-600 transition-colors">API Documentation</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Status</Link></li>
+              <li><a href="#" onClick={(e) => {
+                e.preventDefault();
+                toast({
+                  title: "Status",
+                  description: "All systems operational",
+                  duration: 3000,
+                });
+              }} className="hover:text-indigo-600 transition-colors">Status</a></li>
               <li><Link to="/pricing" className="hover:text-indigo-600 transition-colors">Roadmap</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold mb-4">Company</h4>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">About</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Blog</Link></li>
+              <li><a href="#team" className="hover:text-indigo-600 transition-colors">About</a></li>
+              <li><a href="#" onClick={(e) => {
+                e.preventDefault();
+                toast({
+                  title: "Blog",
+                  description: "Our blog is coming soon!",
+                  duration: 3000,
+                });
+              }} className="hover:text-indigo-600 transition-colors">Blog</a></li>
               <li><Link to="/auth" className="hover:text-indigo-600 transition-colors">Careers</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Press</Link></li>
+              <li><a href="#" onClick={(e) => {
+                e.preventDefault();
+                toast({
+                  title: "Press",
+                  description: "Press inquiries: press@dispatchhelper.com",
+                  duration: 3000,
+                });
+              }} className="hover:text-indigo-600 transition-colors">Press</a></li>
               <li><Link to="/pricing" className="hover:text-indigo-600 transition-colors">Partners</Link></li>
             </ul>
           </div>
@@ -40,8 +74,22 @@ export const SaaSFooter = () => {
               <li><Link to="/auth" className="hover:text-indigo-600 transition-colors">Help Center</Link></li>
               <li><Link to="/chat" className="hover:text-indigo-600 transition-colors">Community</Link></li>
               <li><Link to="/ai-dispatch" className="hover:text-indigo-600 transition-colors">Developers</Link></li>
-              <li><Link to="/pricing" className="hover:text-indigo-600 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/pricing" className="hover:text-indigo-600 transition-colors">Terms of Service</Link></li>
+              <li><a href="#" onClick={(e) => {
+                e.preventDefault();
+                toast({
+                  title: "Privacy Policy",
+                  description: "Our privacy policy is available upon request",
+                  duration: 3000,
+                });
+              }} className="hover:text-indigo-600 transition-colors">Privacy Policy</a></li>
+              <li><a href="#" onClick={(e) => {
+                e.preventDefault();
+                toast({
+                  title: "Terms of Service",
+                  description: "By using our services, you agree to our terms",
+                  duration: 3000,
+                });
+              }} className="hover:text-indigo-600 transition-colors">Terms of Service</a></li>
             </ul>
           </div>
         </div>
@@ -50,15 +98,27 @@ export const SaaSFooter = () => {
             © 2025 DISPATCH HELPER. All rights reserved.
           </p>
           <div className="flex space-x-6">
-            <Link to="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-700 transition-colors">
+            <a 
+              href="#" 
+              onClick={(e) => handleExternalLink(e, "https://twitter.com")} 
+              className="text-indigo-600 hover:text-indigo-700 transition-colors"
+            >
               Twitter
-            </Link>
-            <Link to="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-700 transition-colors">
+            </a>
+            <a 
+              href="#" 
+              onClick={(e) => handleExternalLink(e, "https://linkedin.com")} 
+              className="text-indigo-600 hover:text-indigo-700 transition-colors"
+            >
               LinkedIn
-            </Link>
-            <Link to="https://github.com" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-700 transition-colors">
+            </a>
+            <a 
+              href="#" 
+              onClick={(e) => handleExternalLink(e, "https://github.com")} 
+              className="text-indigo-600 hover:text-indigo-700 transition-colors"
+            >
               GitHub
-            </Link>
+            </a>
           </div>
         </div>
       </div>
