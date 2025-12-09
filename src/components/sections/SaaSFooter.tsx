@@ -20,11 +20,12 @@ export const SaaSFooter = () => {
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <Link to="/" className="inline-block">
-              <h3 className="text-lg font-bold mb-4 text-indigo-600">DISPATCH HELPER</h3>
+            <Link to="/" className="inline-block flex items-center space-x-2">
+              <img src="/spatchy-icon.svg" alt="Spatchy AI" className="w-6 h-6" />
+              <h3 className="text-lg font-bold text-blue-600 font-mono">SPATCHY AI</h3>
             </Link>
-            <p className="text-sm text-gray-600">
-              The intelligent SaaS platform for optimizing your business operations.
+            <p className="text-sm text-gray-600 mt-4">
+              AI-native dispatch platform built for trucking operators who demand excellence.
             </p>
           </div>
           <div>
@@ -61,7 +62,7 @@ export const SaaSFooter = () => {
                 e.preventDefault();
                 toast({
                   title: "Press",
-                  description: "Press inquiries: press@dispatchhelper.com",
+                  description: "Press inquiries: press@spatchy.ai",
                   duration: 3000,
                 });
               }} className="hover:text-indigo-600 transition-colors">Press</a></li>
@@ -94,8 +95,8 @@ export const SaaSFooter = () => {
           </div>
         </div>
         <div className="border-t border-indigo-100 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-indigo-600 mb-4 md:mb-0">
-            © 2025 DISPATCH HELPER. All rights reserved.
+          <p className="text-sm text-gray-600 mb-4 md:mb-0">
+            © 2025 Spatchy AI. All rights reserved.
           </p>
           <div className="flex space-x-6">
             <a 
