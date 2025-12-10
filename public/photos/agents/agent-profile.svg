@@ -1,0 +1,29 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Agent Profile Silhouette -->
+  <defs>
+    <linearGradient id="agentGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#agentGrad)" stroke="#3b82f6" stroke-width="3"/>
+  
+  <!-- Agent silhouette -->
+  <g fill="#334155">
+    <!-- Head -->
+    <circle cx="100" cy="70" r="25"/>
+    <!-- Shoulders/body -->
+    <path d="M65,120 Q100,100 135,120 L135,140 L65,140 Z"/>
+  </g>
+  
+  <!-- Security badge indicator -->
+  <rect x="85" y="115" width="30" height="20" rx="3" fill="#1e40af" stroke="#3b82f6" stroke-width="1"/>
+  <text x="100" y="128" font-family="monospace" font-size="8" fill="#60a5fa" text-anchor="middle">ID</text>
+  
+  <!-- Status indicator -->
+  <circle cx="160" cy="40" r="8" fill="#22c55e" stroke="#fff" stroke-width="2">
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

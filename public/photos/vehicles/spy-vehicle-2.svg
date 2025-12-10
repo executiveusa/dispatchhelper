@@ -1,0 +1,43 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="car2Body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- SUV style dispatch vehicle -->
+  <g transform="translate(50, 80)">
+    <!-- Shadow -->
+    <ellipse cx="150" cy="150" rx="150" ry="25" fill="#000000" opacity="0.3"/>
+    
+    <!-- Car body - taller SUV profile -->
+    <path d="M30,90 L70,40 L230,40 L270,90 L270,130 L250,140 L50,140 L30,130 Z" 
+          fill="url(#car2Body)" stroke="#475569" stroke-width="2"/>
+    
+    <!-- Windows -->
+    <path d="M80,40 L100,20 L200,20 L220,40" fill="#1e3a8a" stroke="#475569" stroke-width="2"/>
+    <path d="M75,90 L75,50 L100,50 L100,90 Z" fill="#1e3a8a" stroke="#475569" stroke-width="1"/>
+    <path d="M200,90 L200,50 L225,50 L225,90 Z" fill="#1e3a8a" stroke="#475569" stroke-width="1"/>
+    
+    <!-- Headlights -->
+    <rect x="255" y="95" width="12" height="10" rx="2" fill="#60a5fa" opacity="0.9"/>
+    <rect x="255" y="115" width="12" height="10" rx="2" fill="#ef4444" opacity="0.7"/>
+    
+    <!-- Wheels -->
+    <g>
+      <ellipse cx="90" cy="140" rx="28" ry="28" fill="#18181b" stroke="#52525b" stroke-width="5"/>
+      <ellipse cx="90" cy="140" rx="15" ry="15" fill="#3f3f46"/>
+      <ellipse cx="210" cy="140" rx="28" ry="28" fill="#18181b" stroke="#52525b" stroke-width="5"/>
+      <ellipse cx="210" cy="140" rx="15" ry="15" fill="#3f3f46"/>
+    </g>
+    
+    <!-- Side detail - mission badge -->
+    <rect x="130" y="85" width="40" height="30" rx="3" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1" opacity="0.7"/>
+    <text x="150" y="103" font-family="monospace" font-size="10" fill="#60a5fa" text-anchor="middle">UNIT</text>
+  </g>
+  
+  <text x="200" y="260" font-family="monospace" font-size="14" fill="#64748b" text-anchor="middle">
+    DISPATCH UNIT BRAVO
+  </text>
+</svg>
