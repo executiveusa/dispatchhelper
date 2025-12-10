@@ -9,15 +9,18 @@ import type { Request, CreateRequestInput, UpdateRequestInput } from '../types';
 
 /**
  * Fetch all requests for the current tenant
+ * CRITICAL: tenantId is REQUIRED for data isolation
  */
-export async function getRequests(tenantId?: string) {
-  let query = supabase.from('requests').select('*').order('created_at', { ascending: false });
-
-  if (tenantId) {
-    query = query.eq('tenant_id', tenantId);
+export async function getRequests(tenantId: string) {
+  if (!tenantId) {
+    throw new Error('SECURITY: tenantId is required for getRequests');
   }
 
-  const { data, error } = await query;
+  const { data, error } = await supabase
+    .from('requests')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .order('created_at', { ascending: false });
 
   if (error) throw error;
   return data as Request[];
@@ -39,14 +42,19 @@ export async function getRequest(id: string) {
 
 /**
  * Create a new request
+ * CRITICAL: tenantId is REQUIRED for data isolation
  */
-export async function createRequest(input: CreateRequestInput, tenantId?: string, userId?: string) {
+export async function createRequest(input: CreateRequestInput, tenantId: string, userId: string) {
+  if (!tenantId) {
+    throw new Error('SECURITY: tenantId is required for createRequest');
+  }
+
   const { data, error } = await supabase
     .from('requests')
     .insert({
       ...input,
-      tenant_id: tenantId || null,
-      created_by: userId || null,
+      tenant_id: tenantId,
+      created_by: userId,
     })
     .select()
     .single();
@@ -82,19 +90,19 @@ export async function deleteRequest(id: string) {
 
 /**
  * Get pending requests (not yet assigned)
+ * CRITICAL: tenantId is REQUIRED for data isolation
  */
-export async function getPendingRequests(tenantId?: string) {
-  let query = supabase
-    .from('requests')
-    .select('*')
-    .eq('status', 'pending')
-    .order('created_at', { ascending: false });
-
-  if (tenantId) {
-    query = query.eq('tenant_id', tenantId);
+export async function getPendingRequests(tenantId: string) {
+  if (!tenantId) {
+    throw new Error('SECURITY: tenantId is required for getPendingRequests');
   }
 
-  const { data, error } = await query;
+  const { data, error } = await supabase
+    .from('requests')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false });
 
   if (error) throw error;
   return data as Request[];

@@ -158,35 +158,195 @@ const tools: Tool[] = [
   },
 ];
 
+// Validate user belongs to tenant
+async function validateTenantMembership(
+  supabase: any,
+  tenantId: string,
+  userId: string
+): Promise<void> {
+  const { data: membership, error } = await supabase
+    .from('tenant_users')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .eq('user_id', userId)
+    .single();
+
+  if (error || !membership) {
+    throw new Error('SECURITY: User does not belong to this tenant');
+  }
+}
+
+// Check automation mode for tenant
+async function checkAutomationMode(
+  supabase: any,
+  tenantId: string
+): Promise<'suggest_only' | 'auto_act'> {
+  const { data: tenant, error } = await supabase
+    .from('tenants')
+    .select('settings')
+    .eq('id', tenantId)
+    .single();
+
+  if (error || !tenant) {
+    // Default to safe mode if tenant not found
+    return 'suggest_only';
+  }
+
+  const settings = tenant.settings || {};
+  return settings.automation_mode || 'suggest_only';
+}
+
+// Log AI action to events table
+async function logAIAction(
+  supabase: any,
+  tenantId: string,
+  userId: string,
+  toolName: string,
+  inputs: any,
+  outputs: any,
+  reasoning: string
+): Promise<void> {
+  await supabase.from('events').insert({
+    tenant_id: tenantId,
+    event_type: 'ai_action',
+    description: \`AI tool executed: \${toolName}\`,
+    metadata: {
+      tool_name: toolName,
+      inputs,
+      outputs,
+      reasoning,
+      user_id: userId,
+      timestamp: new Date().toISOString(),
+    },
+  });
+}
+
 // Tool execution handlers
 async function executeTool(
   toolName: string,
   args: any,
   supabase: any,
   tenantId: string,
-  userId: string
+  userId: string,
+  automationMode: 'suggest_only' | 'auto_act' = 'suggest_only'
 ): Promise<any> {
   console.log(\`Executing tool: \${toolName}\`, args);
 
+  // CRITICAL: Validate tenant membership before any operation
+  await validateTenantMembership(supabase, tenantId, userId);
+
   switch (toolName) {
     case 'create_load': {
+      const loadData = {
+        tenant_id: tenantId,
+        created_by: userId,
+        ...args,
+      };
+
+      // Check automation mode
+      if (automationMode === 'suggest_only') {
+        // Return suggestion without writing
+        const suggestion = {
+          action: 'create_load',
+          proposed: loadData,
+          reasoning: 'AI suggests creating this load based on provided details',
+          requires_approval: true,
+          mode: 'suggest_only',
+        };
+
+        // Log the suggestion
+        await logAIAction(
+          supabase,
+          tenantId,
+          userId,
+          'create_load',
+          args,
+          { suggested: true },
+          'AI proposed creating a new load'
+        );
+
+        return suggestion;
+      }
+
+      // Execute in auto_act mode
       const { data, error } = await supabase
         .from('loads')
-        .insert({
-          tenant_id: tenantId,
-          created_by: userId,
-          ...args,
-        })
+        .insert(loadData)
         .select()
         .single();
 
       if (error) throw error;
-      return { success: true, load: data };
+
+      // Log the action
+      await logAIAction(
+        supabase,
+        tenantId,
+        userId,
+        'create_load',
+        args,
+        { success: true, load_id: data.id },
+        \`AI created load from \${args.pickup_location} to \${args.dropoff_location}\`
+      );
+
+      return { success: true, load: data, mode: 'auto_act' };
     }
 
     case 'assign_driver': {
       const loadId = args.load_id || args.request_id; // Support both parameter names for compatibility
-      
+
+      // Verify load belongs to tenant
+      const { data: load, error: loadCheckError } = await supabase
+        .from('loads')
+        .select('id, tenant_id, pickup_location, dropoff_location')
+        .eq('id', loadId)
+        .eq('tenant_id', tenantId)
+        .single();
+
+      if (loadCheckError || !load) {
+        throw new Error('Load not found or does not belong to this tenant');
+      }
+
+      // Verify driver belongs to tenant
+      const { data: driver, error: driverCheckError } = await supabase
+        .from('drivers')
+        .select('id, name, tenant_id')
+        .eq('id', args.driver_id)
+        .eq('tenant_id', tenantId)
+        .single();
+
+      if (driverCheckError || !driver) {
+        throw new Error('Driver not found or does not belong to this tenant');
+      }
+
+      // Check automation mode
+      if (automationMode === 'suggest_only') {
+        const suggestion = {
+          action: 'assign_driver',
+          proposed: {
+            load_id: loadId,
+            driver_id: args.driver_id,
+            driver_name: driver.name,
+            load_route: \`\${load.pickup_location} → \${load.dropoff_location}\`,
+          },
+          reasoning: args.notes || 'AI suggests assigning this driver based on availability and location',
+          requires_approval: true,
+          mode: 'suggest_only',
+        };
+
+        await logAIAction(
+          supabase,
+          tenantId,
+          userId,
+          'assign_driver',
+          args,
+          { suggested: true },
+          \`AI proposed assigning driver \${driver.name} to load \${loadId}\`
+        );
+
+        return suggestion;
+      }
+
+      // Execute in auto_act mode
       // Update load with driver assignment
       const { data: loadData, error: loadError } = await supabase
         .from('loads')
@@ -195,6 +355,7 @@ async function executeTool(
           status: 'booked'
         })
         .eq('id', loadId)
+        .eq('tenant_id', tenantId) // Extra safety check
         .select()
         .single();
 
@@ -218,21 +379,86 @@ async function executeTool(
       await supabase
         .from('drivers')
         .update({ status: 'assigned' })
-        .eq('id', args.driver_id);
+        .eq('id', args.driver_id)
+        .eq('tenant_id', tenantId); // Extra safety check
 
-      return { success: true, assignment: data, load: loadData };
+      // Log the action
+      await logAIAction(
+        supabase,
+        tenantId,
+        userId,
+        'assign_driver',
+        args,
+        { success: true, assignment_id: data.id },
+        \`AI assigned driver \${driver.name} to load from \${load.pickup_location} to \${load.dropoff_location}\`
+      );
+
+      return { success: true, assignment: data, load: loadData, mode: 'auto_act' };
     }
 
     case 'update_load_status': {
+      // Verify load belongs to tenant
+      const { data: loadCheck, error: checkError } = await supabase
+        .from('loads')
+        .select('id, status')
+        .eq('id', args.load_id)
+        .eq('tenant_id', tenantId)
+        .single();
+
+      if (checkError || !loadCheck) {
+        throw new Error('Load not found or does not belong to this tenant');
+      }
+
+      // Check automation mode
+      if (automationMode === 'suggest_only') {
+        const suggestion = {
+          action: 'update_load_status',
+          proposed: {
+            load_id: args.load_id,
+            old_status: loadCheck.status,
+            new_status: args.status,
+          },
+          reasoning: \`AI suggests updating load status from \${loadCheck.status} to \${args.status}\`,
+          requires_approval: true,
+          mode: 'suggest_only',
+        };
+
+        await logAIAction(
+          supabase,
+          tenantId,
+          userId,
+          'update_load_status',
+          args,
+          { suggested: true },
+          \`AI proposed status change for load \${args.load_id}\`
+        );
+
+        return suggestion;
+      }
+
+      // Execute in auto_act mode
       const { data, error } = await supabase
         .from('loads')
         .update({ status: args.status })
         .eq('id', args.load_id)
+        .eq('tenant_id', tenantId) // Extra safety check
         .select()
         .single();
 
       if (error) throw error;
-      return { success: true, load: data };
+
+      // Log the action
+      await logAIAction(
+        supabase,
+        tenantId,
+        userId,
+        'update_load_status',
+        args,
+        { success: true, new_status: args.status },
+        \`AI updated load \${args.load_id} status to \${args.status}\`
+      );
+
+      return { success: true, load: data, mode: 'auto_act' };
     }
 
     case 'get_available_drivers': {
@@ -446,6 +672,19 @@ Current context:
       throw new Error('No AI provider configured');
     }
 
+    // Check automation mode and paused status
+    const automationMode = await checkAutomationMode(supabase, tenant_id);
+    const { data: tenant } = await supabase
+      .from('tenants')
+      .select('settings')
+      .eq('id', tenant_id)
+      .single();
+    
+    const automationPaused = tenant?.settings?.automation_paused || false;
+    
+    // If automation is paused, force suggest_only mode
+    const effectiveMode = automationPaused ? 'suggest_only' : automationMode;
+
     // Handle tool calls if present
     if (response.content && response.content.some((c: any) => c.type === 'tool_use')) {
       const toolResults = [];
@@ -458,7 +697,8 @@ Current context:
               content.input,
               supabase,
               tenant_id,
-              user_id
+              user_id,
+              effectiveMode
             );
             toolResults.push({
               tool_call_id: content.id,
