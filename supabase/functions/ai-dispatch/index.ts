@@ -49,19 +49,19 @@ const tools: Tool[] = [
   {
     type: 'function',
     function: {
-      name: 'create_request',
-      description: 'Create a new dispatch request/load in the system',
+      name: 'create_load',
+      description: 'Create a new load in the system',
       parameters: {
         type: 'object',
         properties: {
           pickup_location: { type: 'string', description: 'Pickup location' },
           dropoff_location: { type: 'string', description: 'Dropoff location' },
-          pickup_datetime: { type: 'string', description: 'Pickup datetime (ISO 8601)' },
-          dropoff_datetime: { type: 'string', description: 'Dropoff datetime (ISO 8601)' },
-          cargo_type: { type: 'string', description: 'Type of cargo' },
-          weight: { type: 'number', description: 'Weight of cargo' },
+          pickup_time: { type: 'string', description: 'Pickup datetime (ISO 8601)' },
+          dropoff_time: { type: 'string', description: 'Dropoff datetime (ISO 8601)' },
           rate: { type: 'number', description: 'Rate for this load' },
-          broker_name: { type: 'string', description: 'Broker name' },
+          reference: { type: 'string', description: 'Load/BOL reference number' },
+          lane_key: { type: 'string', description: 'Lane key (e.g., ATL-CHI)' },
+          broker_id: { type: 'string', description: 'UUID of the broker' },
           notes: { type: 'string', description: 'Additional notes' },
         },
         required: ['pickup_location', 'dropoff_location'],
@@ -87,19 +87,19 @@ const tools: Tool[] = [
   {
     type: 'function',
     function: {
-      name: 'update_status',
-      description: 'Update the status of a dispatch request',
+      name: 'update_load_status',
+      description: 'Update the status of a load',
       parameters: {
         type: 'object',
         properties: {
-          request_id: { type: 'string', description: 'UUID of the request' },
+          load_id: { type: 'string', description: 'UUID of the load' },
           status: {
             type: 'string',
-            enum: ['pending', 'assigned', 'in_transit', 'delivered', 'cancelled'],
+            enum: ['new', 'quoted', 'booked', 'in_transit', 'delivered', 'cancelled', 'problem'],
             description: 'New status',
           },
         },
-        required: ['request_id', 'status'],
+        required: ['load_id', 'status'],
       },
     },
   },
@@ -119,12 +119,39 @@ const tools: Tool[] = [
   {
     type: 'function',
     function: {
-      name: 'get_pending_requests',
-      description: 'Get list of pending dispatch requests that need assignment',
+      name: 'get_loads',
+      description: 'Get list of loads in the system, optionally filtered by status',
       parameters: {
         type: 'object',
         properties: {
-          limit: { type: 'number', description: 'Max number of requests to return' },
+          status: { type: 'string', description: 'Filter by load status' },
+          limit: { type: 'number', description: 'Max number of loads to return' },
+        },
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'propose_lane_plan',
+      description: 'Propose a lane utilization plan for available trucks',
+      parameters: {
+        type: 'object',
+        properties: {
+          timeframe: { type: 'string', description: 'Timeframe to plan for (e.g., "tomorrow", "next week")' },
+        },
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'summarize_day',
+      description: 'Summarize dispatch operations for a given day',
+      parameters: {
+        type: 'object',
+        properties: {
+          date: { type: 'string', description: 'Date to summarize (ISO 8601, defaults to today)' },
         },
       },
     },
@@ -142,9 +169,9 @@ async function executeTool(
   console.log(\`Executing tool: \${toolName}\`, args);
 
   switch (toolName) {
-    case 'create_request': {
+    case 'create_load': {
       const { data, error } = await supabase
-        .from('requests')
+        .from('loads')
         .insert({
           tenant_id: tenantId,
           created_by: userId,
@@ -154,10 +181,24 @@ async function executeTool(
         .single();
 
       if (error) throw error;
-      return { success: true, request: data };
+      return { success: true, load: data };
     }
 
     case 'assign_driver': {
+      // Update load with driver assignment
+      const { data: loadData, error: loadError } = await supabase
+        .from('loads')
+        .update({ 
+          driver_id: args.driver_id,
+          status: 'booked'
+        })
+        .eq('id', args.request_id)
+        .select()
+        .single();
+
+      if (loadError) throw loadError;
+
+      // Create assignment record
       const { data, error } = await supabase
         .from('assignments')
         .insert({
@@ -171,31 +212,25 @@ async function executeTool(
 
       if (error) throw error;
 
-      // Update request status
-      await supabase
-        .from('requests')
-        .update({ status: 'assigned' })
-        .eq('id', args.request_id);
-
       // Update driver status
       await supabase
         .from('drivers')
         .update({ status: 'assigned' })
         .eq('id', args.driver_id);
 
-      return { success: true, assignment: data };
+      return { success: true, assignment: data, load: loadData };
     }
 
-    case 'update_status': {
+    case 'update_load_status': {
       const { data, error } = await supabase
-        .from('requests')
+        .from('loads')
         .update({ status: args.status })
-        .eq('id', args.request_id)
+        .eq('id', args.load_id)
         .select()
         .single();
 
       if (error) throw error;
-      return { success: true, request: data };
+      return { success: true, load: data };
     }
 
     case 'get_available_drivers': {
@@ -215,17 +250,92 @@ async function executeTool(
       return { drivers: data };
     }
 
-    case 'get_pending_requests': {
-      const { data, error } = await supabase
-        .from('requests')
+    case 'get_loads': {
+      let query = supabase
+        .from('loads')
         .select('*')
         .eq('tenant_id', tenantId)
-        .eq('status', 'pending')
         .order('created_at', { ascending: false })
         .limit(args.limit || 10);
 
+      if (args.status) {
+        query = query.eq('status', args.status);
+      }
+
+      const { data, error } = await query;
       if (error) throw error;
-      return { requests: data };
+      return { loads: data };
+    }
+
+    case 'propose_lane_plan': {
+      // Get available drivers
+      const { data: drivers } = await supabase
+        .from('drivers')
+        .select('*')
+        .eq('tenant_id', tenantId)
+        .eq('status', 'available');
+
+      // Get recent loads to analyze lane patterns
+      const { data: recentLoads } = await supabase
+        .from('loads')
+        .select('lane_key, rate')
+        .eq('tenant_id', tenantId)
+        .not('lane_key', 'is', null)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      // Analyze lane profitability
+      const laneStats = recentLoads?.reduce((acc: any, load: any) => {
+        if (!acc[load.lane_key]) {
+          acc[load.lane_key] = { count: 0, totalRate: 0 };
+        }
+        acc[load.lane_key].count++;
+        acc[load.lane_key].totalRate += load.rate || 0;
+        return acc;
+      }, {});
+
+      const topLanes = Object.entries(laneStats || {})
+        .map(([lane, stats]: [string, any]) => ({
+          lane,
+          avgRate: stats.totalRate / stats.count,
+          frequency: stats.count,
+        }))
+        .sort((a: any, b: any) => b.avgRate - a.avgRate)
+        .slice(0, 5);
+
+      return {
+        availableDrivers: drivers?.length || 0,
+        topLanes,
+        recommendation: \`You have \${drivers?.length || 0} available drivers. Consider focusing on these high-value lanes.\`,
+      };
+    }
+
+    case 'summarize_day': {
+      const targetDate = args.date ? new Date(args.date) : new Date();
+      targetDate.setHours(0, 0, 0, 0);
+      const nextDay = new Date(targetDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+
+      const { data: loads } = await supabase
+        .from('loads')
+        .select('*')
+        .eq('tenant_id', tenantId)
+        .gte('created_at', targetDate.toISOString())
+        .lt('created_at', nextDay.toISOString());
+
+      const totalRevenue = loads?.reduce((sum, load) => sum + (load.rate || 0), 0) || 0;
+      const statusBreakdown = loads?.reduce((acc: any, load) => {
+        acc[load.status] = (acc[load.status] || 0) + 1;
+        return acc;
+      }, {});
+
+      return {
+        date: targetDate.toISOString().split('T')[0],
+        totalLoads: loads?.length || 0,
+        totalRevenue,
+        statusBreakdown,
+        avgRate: loads?.length ? totalRevenue / loads.length : 0,
+      };
     }
 
     default:
@@ -291,21 +401,32 @@ serve(async (req) => {
     // System prompt
     const systemMessage: Message = {
       role: 'system',
-      content: \`You are Spatchy AI, an intelligent dispatch assistant for trucking operations.
+      content: \`You are Spatchy AI, the AI dispatch copilot for boutique, female-led trucking operations.
+
+Your mission: Automate the mental load of dispatch so dispatchers can think like CEOs, not switchboards.
 
 Your capabilities:
-- Create new dispatch requests/loads
-- Assign drivers to loads based on availability
-- Update request statuses
-- Query available drivers and pending requests
-- Provide dispatch recommendations
+- Create and manage loads with full lifecycle tracking
+- Assign drivers intelligently based on availability, location, and preferences
+- Update load statuses and track operational flow
+- Query drivers, loads, and operational data
+- Propose lane utilization plans to maximize RPM
+- Summarize daily operations for decision-making
+- Draft communication (broker updates, driver messages) - coming soon
+
+Your personality:
+- Trustworthy and transparent (no hidden actions)
+- Confident but empathetic
+- Action-oriented with clear explanations
+- Respectful of dispatcher boundaries and quiet hours
 
 Guidelines:
-- Always confirm details before creating requests
-- Check driver availability before assignments
-- Prioritize urgent loads
-- Be concise and action-oriented
-- Use tools proactively to help the user
+- Always confirm critical details before creating loads
+- Check driver availability and current status before assignments
+- Prioritize high-value loads and efficient lane utilization
+- Be concise - dispatchers are busy
+- Use tools proactively to provide insights and recommendations
+- When suggesting actions, explain the "why" behind your recommendation
 
 Current context:
 - Tenant ID: \${tenant_id}
