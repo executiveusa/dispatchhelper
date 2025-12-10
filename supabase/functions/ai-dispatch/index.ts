@@ -209,7 +209,7 @@ async function logAIAction(
   await supabase.from('events').insert({
     tenant_id: tenantId,
     event_type: 'ai_action',
-    description: \`AI tool executed: \${toolName}\`,
+    description: `AI tool executed: ${toolName}`,
     metadata: {
       tool_name: toolName,
       inputs,
@@ -230,7 +230,7 @@ async function executeTool(
   userId: string,
   automationMode: 'suggest_only' | 'auto_act' = 'suggest_only'
 ): Promise<any> {
-  console.log(\`Executing tool: \${toolName}\`, args);
+  console.log(`Executing tool: ${toolName}`, args);
 
   // CRITICAL: Validate tenant membership before any operation
   await validateTenantMembership(supabase, tenantId, userId);
@@ -573,6 +573,8 @@ async function executeTool(
 
 // Call Anthropic Claude API
 async function callClaude(messages: Message[]): Promise<any> {
+  const startTime = Date.now();
+  
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -591,11 +593,22 @@ async function callClaude(messages: Message[]): Promise<any> {
     }),
   });
 
+  const durationMs = Date.now() - startTime;
+
   if (!response.ok) {
     throw new Error(\`Anthropic API error: \${response.statusText}\`);
   }
 
-  return await response.json();
+  const result = await response.json();
+  
+  // Attach timing metadata
+  result._meta = {
+    duration_ms: durationMs,
+    provider: 'anthropic',
+    model: 'claude-3-5-sonnet-20241022',
+  };
+
+  return result;
 }
 
 // Main handler
@@ -618,6 +631,10 @@ serve(async (req) => {
       throw new Error('Invalid messages array');
     }
 
+    if (!tenant_id || !user_id) {
+      throw new Error('tenant_id and user_id are required');
+    }
+
     // Initialize Supabase client
     const authHeader = req.headers.get('Authorization')!;
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
@@ -625,6 +642,22 @@ serve(async (req) => {
         headers: { Authorization: authHeader },
       },
     });
+
+    // CRITICAL: Check usage limits before making AI call
+    const { data: limitsCheck, error: limitsError } = await supabase.rpc(
+      'check_tenant_ai_limits',
+      { p_tenant_id: tenant_id, p_estimated_tokens: 2000 }
+    );
+
+    if (limitsError) {
+      console.error('Error checking limits:', limitsError);
+      // Continue anyway - don't block on limits check failure
+    } else if (limitsCheck && limitsCheck.length > 0) {
+      const check = limitsCheck[0];
+      if (!check.allowed) {
+        throw new Error(\`AI usage limit exceeded: \${check.reason}\`);
+      }
+    }
 
     // System prompt
     const systemMessage: Message = {
@@ -666,10 +699,38 @@ Current context:
 
     // Call LLM
     let response;
-    if (ANTHROPIC_API_KEY) {
-      response = await callClaude(fullMessages);
-    } else {
-      throw new Error('No AI provider configured');
+    let aiCallSuccess = false;
+    let aiCallError = null;
+    
+    try {
+      if (ANTHROPIC_API_KEY) {
+        response = await callClaude(fullMessages);
+        aiCallSuccess = true;
+      } else {
+        throw new Error('No AI provider configured');
+      }
+    } catch (error: any) {
+      aiCallError = error;
+      throw error;
+    } finally {
+      // Log AI usage regardless of success/failure
+      if (response?._meta) {
+        const usage = response.usage || {};
+        await supabase.rpc('log_ai_usage', {
+          p_tenant_id: tenant_id,
+          p_user_id: user_id,
+          p_provider: response._meta.provider,
+          p_model: response._meta.model,
+          p_function_name: 'ai-dispatch',
+          p_input_tokens: usage.input_tokens || 0,
+          p_output_tokens: usage.output_tokens || 0,
+          p_status: aiCallSuccess ? 'success' : 'failed',
+          p_duration_ms: response._meta.duration_ms,
+          p_error_message: aiCallError?.message || null,
+        }).catch((logError) => {
+          console.error('Failed to log AI usage:', logError);
+        });
+      }
     }
 
     // Check automation mode and paused status
