@@ -57,10 +57,11 @@ export function AICopilotPanel({ contextLoadId }: AICopilotPanelProps) {
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
+    const userInput = input.trim(); // Capture input before clearing
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: input,
+      content: userInput,
       timestamp: new Date(),
     };
 
@@ -73,7 +74,7 @@ export function AICopilotPanel({ contextLoadId }: AICopilotPanelProps) {
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `I understand you want to: "${input}". This is a demo response. In production, I would analyze your dispatch data and provide specific recommendations, draft messages, or suggest actions based on your current operations.`,
+        content: `I understand you want to: "${userInput}". This is a demo response. In production, I would analyze your dispatch data and provide specific recommendations, draft messages, or suggest actions based on your current operations.`,
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, aiMessage]);

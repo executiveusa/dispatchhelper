@@ -72,15 +72,15 @@ const tools: Tool[] = [
     type: 'function',
     function: {
       name: 'assign_driver',
-      description: 'Assign a driver to a dispatch request',
+      description: 'Assign a driver to a load',
       parameters: {
         type: 'object',
         properties: {
-          request_id: { type: 'string', description: 'UUID of the request' },
+          load_id: { type: 'string', description: 'UUID of the load' },
           driver_id: { type: 'string', description: 'UUID of the driver' },
           notes: { type: 'string', description: 'Assignment notes' },
         },
-        required: ['request_id', 'driver_id'],
+        required: ['load_id', 'driver_id'],
       },
     },
   },
@@ -185,6 +185,8 @@ async function executeTool(
     }
 
     case 'assign_driver': {
+      const loadId = args.load_id || args.request_id; // Support both parameter names for compatibility
+      
       // Update load with driver assignment
       const { data: loadData, error: loadError } = await supabase
         .from('loads')
@@ -192,7 +194,7 @@ async function executeTool(
           driver_id: args.driver_id,
           status: 'booked'
         })
-        .eq('id', args.request_id)
+        .eq('id', loadId)
         .select()
         .single();
 
@@ -202,7 +204,7 @@ async function executeTool(
       const { data, error } = await supabase
         .from('assignments')
         .insert({
-          request_id: args.request_id,
+          request_id: loadId,
           driver_id: args.driver_id,
           assigned_by: userId,
           notes: args.notes,

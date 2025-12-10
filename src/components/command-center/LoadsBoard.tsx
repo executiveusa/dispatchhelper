@@ -35,10 +35,11 @@ interface LoadsBoardProps {
 }
 
 const statusColumns = [
-  { id: 'new', label: 'New', color: 'bg-blue-500' },
-  { id: 'booked', label: 'Booked', color: 'bg-green-500' },
-  { id: 'in_transit', label: 'In Transit', color: 'bg-yellow-500' },
-  { id: 'problem', label: 'Problem', color: 'bg-red-500' },
+  { id: 'new', label: 'New', color: '#3b82f6' },
+  { id: 'quoted', label: 'Quoted', color: '#8b5cf6' },
+  { id: 'booked', label: 'Booked', color: '#22c55e' },
+  { id: 'in_transit', label: 'In Transit', color: '#eab308' },
+  { id: 'problem', label: 'Problem', color: '#ef4444' },
 ];
 
 function LoadCard({ load, isSelected, onClick }: { 
@@ -152,10 +153,10 @@ export function LoadsBoard({ selectedLoadId, onSelectLoad }: LoadsBoardProps) {
   }, {} as Record<string, Load[]>);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       {statusColumns.map((column) => (
         <div key={column.id} className="space-y-4">
-          <Card className="border-t-4" style={{ borderTopColor: column.color.replace('bg-', '#') }}>
+          <Card className="border-t-4" style={{ borderTopColor: column.color }}>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-semibold flex items-center justify-between">
                 <span>{column.label}</span>
