@@ -22,8 +22,8 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between h-16">
         <Link to="/" className="flex items-center space-x-2">
           <img src="/spatchy-icon.svg" alt="Spatchy AI" className="w-8 h-8" />
-          <span className="font-mono text-xl font-bold text-blue-600">
-            SPATCHY AI
+          <span className="font-mono text-xl font-bold text-spatchy-coral">
+            Spatchy AI
           </span>
         </Link>
         
@@ -80,32 +80,32 @@ const Navbar = () => {
                 </Button>
               </Link>
               <Link to="/chat">
-                <Button variant="ghost" size="sm" className="text-blue-600">
+                <Button variant="ghost" size="sm" className="text-primary">
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Chat
                 </Button>
               </Link>
               {isAdmin && (
-                <Link to="/dispatch">
-                  <Button variant="outline" size="sm" className="text-blue-600">
+                <Link to="/command-center">
+                  <Button variant="outline" size="sm" className="text-primary border-primary">
                     <BarChart3 className="h-4 w-4 mr-2" />
-                    Admin
+                    Command Center
                   </Button>
                 </Link>
               )}
-              <Button variant="ghost" size="icon" onClick={() => signOut()} className="text-blue-600">
+              <Button variant="ghost" size="icon" onClick={() => signOut()} className="text-primary">
                 <LogOut className="h-4 w-4" />
               </Button>
             </>
           ) : (
             <>
               <Link to="/auth">
-                <Button variant="ghost" size="sm" className="text-blue-600">
+                <Button variant="ghost" size="sm" className="text-primary">
                   Sign In
                 </Button>
               </Link>
               <Link to="/pricing">
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700">Get Started</Button>
+                <Button size="sm" className="bg-primary hover:bg-primary/90">Get Started</Button>
               </Link>
             </>
           )}
