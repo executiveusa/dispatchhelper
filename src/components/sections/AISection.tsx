@@ -8,7 +8,7 @@ export const AISection = () => {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Hello, I'm your personal AI assistant. How may I help you today?"
+      content: "Intelligence Officer online. Awaiting mission parameters. How may I assist with your operation?"
     }
   ]);
   const [input, setInput] = useState("");
@@ -71,38 +71,52 @@ export const AISection = () => {
   };
 
   return (
-    <section className="py-24 bg-white">
-      <div className="container mx-auto">
+    <section className="py-24 bg-slate-950 relative overflow-hidden">
+      {/* Tech background */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(90deg, #3b82f6 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }} />
+      </div>
+      
+      <div className="container mx-auto relative z-10">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="order-2 md:order-1">
-            <div className="bg-gray-100 rounded-lg p-6 shadow-lg h-[400px] flex flex-col">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white">
-                  <Code className="w-6 h-6" />
+            <div className="bg-slate-900/80 rounded-lg border border-blue-500/30 p-6 shadow-2xl h-[400px] flex flex-col backdrop-blur-sm">
+              <div className="flex items-center mb-4 pb-4 border-b border-blue-500/30">
+                <div className="w-12 h-12 rounded bg-blue-600/20 border border-blue-400 flex items-center justify-center text-white">
+                  <Code className="w-6 h-6 text-blue-400" />
                 </div>
                 <div className="ml-4">
-                  <h3 className="font-semibold">AI Assistant</h3>
-                  <p className="text-sm text-gray-500">Always online</p>
+                  <h3 className="font-semibold text-white font-mono">INTELLIGENCE OFFICER</h3>
+                  <p className="text-sm text-green-400 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                    OPERATIONAL
+                  </p>
                 </div>
               </div>
-              <div className="space-y-4 flex-1 overflow-y-auto mb-4">
+              <div className="space-y-4 flex-1 overflow-y-auto mb-4 pr-2">
                 {messages.map((message, index) => (
                   <div 
                     key={index}
                     className={`${
                       message.role === "user" 
-                        ? "bg-blue-100 p-3 rounded-lg rounded-tr-none shadow-sm ml-auto max-w-[80%]" 
-                        : "bg-white p-3 rounded-lg rounded-tl-none shadow-sm max-w-[80%]"
+                        ? "bg-blue-600/30 border border-blue-400/50 p-3 rounded rounded-tr-none shadow-sm ml-auto max-w-[80%] text-gray-200" 
+                        : "bg-slate-800/80 border border-blue-500/20 p-3 rounded rounded-tl-none shadow-sm max-w-[80%] text-gray-300"
                     }`}
                   >
+                    <div className="font-mono text-xs text-blue-400 mb-1">
+                      {message.role === "user" ? "[COMMAND]" : "[INTEL]"}
+                    </div>
                     {message.content}
                   </div>
                 ))}
                 {isLoading && (
-                  <div className="bg-white p-3 rounded-lg rounded-tl-none shadow-sm flex items-center space-x-2 max-w-[80%]">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
+                  <div className="bg-slate-800/80 border border-blue-500/20 p-3 rounded rounded-tl-none shadow-sm flex items-center space-x-2 max-w-[80%]">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
                   </div>
                 )}
               </div>
@@ -111,13 +125,13 @@ export const AISection = () => {
                   type="text" 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask your AI assistant..." 
-                  className="flex-1 p-2 border rounded-l-lg outline-none focus:ring-2 focus:ring-blue-300" 
+                  placeholder="Enter command..." 
+                  className="flex-1 p-2 bg-slate-800 border border-blue-500/30 rounded-l text-gray-300 outline-none focus:ring-2 focus:ring-blue-400 font-mono placeholder-gray-500" 
                   disabled={isLoading}
                 />
                 <button 
                   type="submit"
-                  className="bg-blue-600 text-white p-2 rounded-r-lg flex items-center justify-center disabled:opacity-50"
+                  className="bg-blue-600 hover:bg-blue-700 border border-blue-400 text-white p-2 rounded-r flex items-center justify-center disabled:opacity-50 transition-colors"
                   disabled={isLoading || !input.trim()}
                 >
                   <Send className="w-5 h-5" />
@@ -126,34 +140,37 @@ export const AISection = () => {
             </div>
           </div>
           <div className="order-1 md:order-2">
-            <h2 className="text-3xl font-mono font-bold mb-6 text-blue-600">/INTELLIGENT WORKFLOW</h2>
-            <p className="text-lg mb-6">
-              Our AI assistant understands your business context, learns from your team's patterns, and helps automate complex workflows with natural language commands.
+            <div className="inline-block px-4 py-2 bg-blue-600/20 border border-blue-400 rounded-md backdrop-blur-sm mb-6">
+              <span className="text-blue-300 font-mono text-sm tracking-widest">[ NEURAL INTERFACE ]</span>
+            </div>
+            <h2 className="text-4xl font-mono font-bold mb-6 text-blue-400 tracking-wider">INTELLIGENT PROTOCOL</h2>
+            <p className="text-lg mb-6 text-gray-300 leading-relaxed">
+              Intelligence system processes mission parameters, learns operational patterns, and automates complex field protocols through natural language commands.
             </p>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               <li className="flex items-center">
-                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2">
-                  <span className="text-blue-600 text-sm">✓</span>
+                <div className="w-6 h-6 rounded bg-blue-600/20 border border-blue-400 flex items-center justify-center mr-3">
+                  <span className="text-blue-400 text-sm">✓</span>
                 </div>
-                <span>Natural language processing</span>
+                <span className="text-gray-300">Natural language command processing</span>
               </li>
               <li className="flex items-center">
-                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2">
-                  <span className="text-blue-600 text-sm">✓</span>
+                <div className="w-6 h-6 rounded bg-blue-600/20 border border-blue-400 flex items-center justify-center mr-3">
+                  <span className="text-blue-400 text-sm">✓</span>
                 </div>
-                <span>Learns your business context</span>
+                <span className="text-gray-300">Learns mission context and parameters</span>
               </li>
               <li className="flex items-center">
-                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2">
-                  <span className="text-blue-600 text-sm">✓</span>
+                <div className="w-6 h-6 rounded bg-blue-600/20 border border-blue-400 flex items-center justify-center mr-3">
+                  <span className="text-blue-400 text-sm">✓</span>
                 </div>
-                <span>Creates automated workflows</span>
+                <span className="text-gray-300">Creates autonomous operation workflows</span>
               </li>
               <li className="flex items-center">
-                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2">
-                  <span className="text-blue-600 text-sm">✓</span>
+                <div className="w-6 h-6 rounded bg-blue-600/20 border border-blue-400 flex items-center justify-center mr-3">
+                  <span className="text-blue-400 text-sm">✓</span>
                 </div>
-                <span>Provides insights and recommendations</span>
+                <span className="text-gray-300">Strategic insights and tactical recommendations</span>
               </li>
             </ul>
           </div>
