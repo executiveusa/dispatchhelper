@@ -21,11 +21,9 @@ const Navbar = () => {
     <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-sm shadow-sm">
       <div className="container mx-auto flex items-center justify-between h-16">
         <Link to="/" className="flex items-center space-x-2">
-          <div className="flex items-center justify-center w-8 h-8 rounded-md bg-blue-600 text-white">
-            <Zap className="h-5 w-5" />
-          </div>
+          <img src="/spatchy-icon.svg" alt="Spatchy AI" className="w-8 h-8" />
           <span className="font-mono text-xl font-bold text-blue-600">
-            DISPATCH AI
+            SPATCHY AI
           </span>
         </Link>
         

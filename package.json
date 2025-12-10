@@ -1,7 +1,9 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "spatchy-ai-web",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "AI-native dispatch platform for trucking operators - frontend web application",
+  "author": "Spatchy AI",
   "type": "module",
   "scripts": {
     "dev": "vite",
