@@ -13,6 +13,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useTenant } from '@/context/TenantContext';
 import { Navigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { OverviewHealthStrip } from '@/components/command-center/OverviewHealthStrip';
@@ -20,10 +21,15 @@ import { LoadsBoard } from '@/components/command-center/LoadsBoard';
 import { DriverPanel } from '@/components/command-center/DriverPanel';
 import { ProblemFeed } from '@/components/command-center/ProblemFeed';
 import { AICopilotPanel } from '@/components/command-center/AICopilotPanel';
+import { AutomationControls } from '@/components/admin/AutomationControls';
+import { SystemHealth } from '@/components/admin/SystemHealth';
+import { UsageStatistics } from '@/components/admin/UsageStatistics';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Settings } from 'lucide-react';
 
 export default function CommandCenter() {
   const { user, profile, loading } = useAuth();
+  const { currentTenant } = useTenant();
   const [selectedLoadId, setSelectedLoadId] = useState<string | null>(null);
 
   if (loading) {
@@ -43,6 +49,8 @@ export default function CommandCenter() {
   if (!allowedRoles.includes(profile?.role || '')) {
     return <Navigate to="/booking" replace />;
   }
+
+  const isAdmin = ['admin', 'owner'].includes(profile?.role || '');
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-spatchy-dark">
@@ -66,10 +74,16 @@ export default function CommandCenter() {
 
             {/* Tabs for Main Views */}
             <Tabs defaultValue="loads" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 max-w-md">
+              <TabsList className={`grid w-full ${isAdmin ? 'grid-cols-4 max-w-lg' : 'grid-cols-3 max-w-md'}`}>
                 <TabsTrigger value="loads">Loads</TabsTrigger>
                 <TabsTrigger value="drivers">Drivers</TabsTrigger>
                 <TabsTrigger value="problems">Problems</TabsTrigger>
+                {isAdmin && (
+                  <TabsTrigger value="settings" className="flex items-center gap-2">
+                    <Settings className="w-4 h-4" />
+                    Settings
+                  </TabsTrigger>
+                )}
               </TabsList>
               
               <TabsContent value="loads" className="mt-6">
@@ -86,6 +100,23 @@ export default function CommandCenter() {
               <TabsContent value="problems" className="mt-6">
                 <ProblemFeed />
               </TabsContent>
+              
+              {isAdmin && currentTenant && (
+                <TabsContent value="settings" className="mt-6 space-y-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <AutomationControls 
+                      tenantId={currentTenant.id} 
+                      userId={user.id}
+                    />
+                    <SystemHealth 
+                      tenantId={currentTenant.id}
+                    />
+                  </div>
+                  <UsageStatistics 
+                    tenantId={currentTenant.id}
+                  />
+                </TabsContent>
+              )}
             </Tabs>
           </div>
 

@@ -285,7 +285,7 @@ async function executeTool(
         'create_load',
         args,
         { success: true, load_id: data.id },
-        \`AI created load from \${args.pickup_location} to \${args.dropoff_location}\`
+        `AI created load from \${args.pickup_location} to \${args.dropoff_location}`
       );
 
       return { success: true, load: data, mode: 'auto_act' };
@@ -326,7 +326,7 @@ async function executeTool(
             load_id: loadId,
             driver_id: args.driver_id,
             driver_name: driver.name,
-            load_route: \`\${load.pickup_location} → \${load.dropoff_location}\`,
+            load_route: `\${load.pickup_location} → \${load.dropoff_location}`,
           },
           reasoning: args.notes || 'AI suggests assigning this driver based on availability and location',
           requires_approval: true,
@@ -340,7 +340,7 @@ async function executeTool(
           'assign_driver',
           args,
           { suggested: true },
-          \`AI proposed assigning driver \${driver.name} to load \${loadId}\`
+          `AI proposed assigning driver \${driver.name} to load \${loadId}`
         );
 
         return suggestion;
@@ -390,7 +390,7 @@ async function executeTool(
         'assign_driver',
         args,
         { success: true, assignment_id: data.id },
-        \`AI assigned driver \${driver.name} to load from \${load.pickup_location} to \${load.dropoff_location}\`
+        `AI assigned driver \${driver.name} to load from \${load.pickup_location} to \${load.dropoff_location}`
       );
 
       return { success: true, assignment: data, load: loadData, mode: 'auto_act' };
@@ -418,7 +418,7 @@ async function executeTool(
             old_status: loadCheck.status,
             new_status: args.status,
           },
-          reasoning: \`AI suggests updating load status from \${loadCheck.status} to \${args.status}\`,
+          reasoning: `AI suggests updating load status from \${loadCheck.status} to \${args.status}`,
           requires_approval: true,
           mode: 'suggest_only',
         };
@@ -430,7 +430,7 @@ async function executeTool(
           'update_load_status',
           args,
           { suggested: true },
-          \`AI proposed status change for load \${args.load_id}\`
+          `AI proposed status change for load \${args.load_id}`
         );
 
         return suggestion;
@@ -455,7 +455,7 @@ async function executeTool(
         'update_load_status',
         args,
         { success: true, new_status: args.status },
-        \`AI updated load \${args.load_id} status to \${args.status}\`
+        `AI updated load \${args.load_id} status to \${args.status}`
       );
 
       return { success: true, load: data, mode: 'auto_act' };
@@ -534,7 +534,7 @@ async function executeTool(
       return {
         availableDrivers: drivers?.length || 0,
         topLanes,
-        recommendation: \`You have \${drivers?.length || 0} available drivers. Consider focusing on these high-value lanes.\`,
+        recommendation: `You have \${drivers?.length || 0} available drivers. Consider focusing on these high-value lanes.`,
       };
     }
 
@@ -567,7 +567,7 @@ async function executeTool(
     }
 
     default:
-      throw new Error(\`Unknown tool: \${toolName}\`);
+      throw new Error(`Unknown tool: \${toolName}`);
   }
 }
 
@@ -596,7 +596,7 @@ async function callClaude(messages: Message[]): Promise<any> {
   const durationMs = Date.now() - startTime;
 
   if (!response.ok) {
-    throw new Error(\`Anthropic API error: \${response.statusText}\`);
+    throw new Error(`Anthropic API error: \${response.statusText}`);
   }
 
   const result = await response.json();
@@ -655,14 +655,14 @@ serve(async (req) => {
     } else if (limitsCheck && limitsCheck.length > 0) {
       const check = limitsCheck[0];
       if (!check.allowed) {
-        throw new Error(\`AI usage limit exceeded: \${check.reason}\`);
+        throw new Error(`AI usage limit exceeded: \${check.reason}`);
       }
     }
 
     // System prompt
     const systemMessage: Message = {
       role: 'system',
-      content: \`You are Spatchy AI, the AI dispatch copilot for boutique, female-led trucking operations.
+      content: `You are Spatchy AI, the AI dispatch copilot for boutique, female-led trucking operations.
 
 Your mission: Automate the mental load of dispatch so dispatchers can think like CEOs, not switchboards.
 
@@ -692,7 +692,7 @@ Guidelines:
 Current context:
 - Tenant ID: \${tenant_id}
 - User ID: \${user_id}
-- Session ID: \${session_id}\`,
+- Session ID: \${session_id}`,
     };
 
     const fullMessages = [systemMessage, ...messages];

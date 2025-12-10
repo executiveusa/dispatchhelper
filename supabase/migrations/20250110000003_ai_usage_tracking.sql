@@ -191,9 +191,11 @@ DECLARE
 BEGIN
   v_total_tokens := p_input_tokens + p_output_tokens;
   
-  -- Rough cost estimation (adjust based on actual pricing)
-  -- Claude 3.5 Sonnet: ~$3/$15 per 1M tokens (input/output)
-  -- Simplified: ~$9 per 1M tokens average
+  -- Rough cost estimation (APPROXIMATION - adjust based on actual pricing)
+  -- Claude 3.5 Sonnet (as of Dec 2024): $3/$15 per 1M tokens (input/output)
+  -- Simplified average: ~$9 per 1M tokens
+  -- NOTE: This is an approximation. Actual costs may vary.
+  -- TODO: Make pricing configurable via tenant_limits or pricing table
   v_estimated_cost := (v_total_tokens::NUMERIC / 1000000.0) * 9.0 * 100.0; -- in cents
   
   INSERT INTO public.ai_usage_log (
