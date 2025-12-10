@@ -80,20 +80,20 @@ const Navbar = () => {
                 </Button>
               </Link>
               <Link to="/chat">
-                <Button variant="ghost" size="sm" className="text-blue-600">
+                <Button variant="ghost" size="sm" className="text-primary">
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Chat
                 </Button>
               </Link>
               {isAdmin && (
-                <Link to="/dispatch">
-                  <Button variant="outline" size="sm" className="text-blue-600">
+                <Link to="/command-center">
+                  <Button variant="outline" size="sm" className="text-primary border-primary">
                     <BarChart3 className="h-4 w-4 mr-2" />
-                    Admin
+                    Command Center
                   </Button>
                 </Link>
               )}
-              <Button variant="ghost" size="icon" onClick={() => signOut()} className="text-blue-600">
+              <Button variant="ghost" size="icon" onClick={() => signOut()} className="text-primary">
                 <LogOut className="h-4 w-4" />
               </Button>
             </>
