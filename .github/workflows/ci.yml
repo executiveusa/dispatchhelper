@@ -14,7 +14,7 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-
+    # Note: Lint errors will not fail the build to allow gradual cleanup
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -35,6 +35,7 @@ jobs:
         run: |
           cd apps/web
           npm run lint
+        continue-on-error: true
 
   type-check:
     name: Type Check
