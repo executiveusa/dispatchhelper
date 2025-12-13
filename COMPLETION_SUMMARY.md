@@ -212,6 +212,7 @@ git push origin main
 - `DEPLOYMENT.md` - General deployment
 - `CONTRIBUTING.md` - Dev guidelines
 - `CHANGELOG.md` - Version history
+- `LINT_ERRORS.md` - Technical debt documentation
 
 ---
 
@@ -247,12 +248,40 @@ Before deploying to production:
 
 ---
 
+## ⚠️ Known Issues
+
+### Lint Errors (Pre-existing from Phase 1-8)
+- **Status**: Documented in `LINT_ERRORS.md`
+- **Count**: 67 errors, 13 warnings
+- **Impact**: Does NOT block build or deployment
+- **CI Behavior**: Lint job uses `continue-on-error: true`
+
+**Error Types**:
+- 64 TypeScript `any` type violations
+- 3 empty interface definitions
+- 8 React hook dependency warnings
+- Other minor style issues
+
+**Resolution**:
+- Errors are fully documented with fix plan
+- Estimated 12-17 hours to resolve all issues
+- Should be addressed in follow-up PR
+- See `LINT_ERRORS.md` for detailed breakdown and implementation plan
+
+**Current CI/CD Status**:
+- ✅ Build: Passes successfully
+- ✅ TypeScript: Type-check passes
+- ⚠️ Lint: Runs but doesn't fail build (intentional)
+- ✅ Deployment: Not blocked
+
+---
+
 ## 📈 Project Stats
 
-**Total Commits:** 13+ on this branch
+**Total Commits:** 14+ on this branch
 **Files Created:** 200+
 **Lines of Code:** 10,000+
-**Documentation:** 8 comprehensive guides
+**Documentation:** 9 comprehensive guides
 **CI/CD Workflows:** 2 automated pipelines
 
 **Structure:**
