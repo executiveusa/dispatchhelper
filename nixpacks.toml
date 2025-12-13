@@ -5,10 +5,10 @@ providers = ["node"]
 nixPkgs = ["nodejs-18_x", "npm-9_x"]
 
 [phases.install]
-cmds = ["npm ci"]
+cmds = ["cd apps/web && npm ci"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["cd apps/web && npm run build"]
 
 [start]
-cmd = "npm run preview"
+cmd = "cd apps/web && npm run preview"
