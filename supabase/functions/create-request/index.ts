@@ -29,6 +29,29 @@ serve(async (req) => {
 
     const requestData = await req.json();
 
+    // CRITICAL: Require tenant_id
+    if (!requestData.tenant_id) {
+      throw new Error('tenant_id is required');
+    }
+
+    // Get the authenticated user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      throw new Error('Unauthorized');
+    }
+
+    // CRITICAL: Validate user belongs to tenant
+    const { data: membership, error: membershipError } = await supabase
+      .from('tenant_users')
+      .select('*')
+      .eq('tenant_id', requestData.tenant_id)
+      .eq('user_id', user.id)
+      .single();
+
+    if (membershipError || !membership) {
+      throw new Error('SECURITY: User does not belong to this tenant');
+    }
+
     const { data, error } = await supabase
       .from('requests')
       .insert(requestData)

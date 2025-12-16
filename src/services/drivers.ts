@@ -9,15 +9,18 @@ import type { Driver, CreateDriverInput, UpdateDriverInput } from '../types';
 
 /**
  * Fetch all drivers for the current tenant
+ * CRITICAL: tenantId is REQUIRED for data isolation
  */
-export async function getDrivers(tenantId?: string) {
-  let query = supabase.from('drivers').select('*').order('name', { ascending: true });
-
-  if (tenantId) {
-    query = query.eq('tenant_id', tenantId);
+export async function getDrivers(tenantId: string) {
+  if (!tenantId) {
+    throw new Error('SECURITY: tenantId is required for getDrivers');
   }
 
-  const { data, error } = await query;
+  const { data, error } = await supabase
+    .from('drivers')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .order('name', { ascending: true });
 
   if (error) throw error;
   return data as Driver[];
@@ -39,13 +42,18 @@ export async function getDriver(id: string) {
 
 /**
  * Create a new driver
+ * CRITICAL: tenantId is REQUIRED for data isolation
  */
-export async function createDriver(input: CreateDriverInput, tenantId?: string) {
+export async function createDriver(input: CreateDriverInput, tenantId: string) {
+  if (!tenantId) {
+    throw new Error('SECURITY: tenantId is required for createDriver');
+  }
+
   const { data, error } = await supabase
     .from('drivers')
     .insert({
       ...input,
-      tenant_id: tenantId || null,
+      tenant_id: tenantId,
       status: 'available',
     })
     .select()
@@ -82,19 +90,19 @@ export async function deleteDriver(id: string) {
 
 /**
  * Get available drivers (status = 'available')
+ * CRITICAL: tenantId is REQUIRED for data isolation
  */
-export async function getAvailableDrivers(tenantId?: string) {
-  let query = supabase
-    .from('drivers')
-    .select('*')
-    .eq('status', 'available')
-    .order('name', { ascending: true });
-
-  if (tenantId) {
-    query = query.eq('tenant_id', tenantId);
+export async function getAvailableDrivers(tenantId: string) {
+  if (!tenantId) {
+    throw new Error('SECURITY: tenantId is required for getAvailableDrivers');
   }
 
-  const { data, error } = await query;
+  const { data, error } = await supabase
+    .from('drivers')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .eq('status', 'available')
+    .order('name', { ascending: true });
 
   if (error) throw error;
   return data as Driver[];
