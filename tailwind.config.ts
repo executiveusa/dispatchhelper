@@ -45,6 +45,10 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
@@ -53,6 +57,13 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Spatchy AI semantic colors
+        'spatchy-coral': '#F97373',
+        'spatchy-slate': '#0F172A',
+        'spatchy-dark': '#020617',
+        'spatchy-green': '#22C55E',
+        'spatchy-yellow': '#FACC15',
+        'spatchy-red': '#EF4444',
       },
       fontFamily: {
         mono: ["JetBrains Mono", "monospace"],
@@ -60,7 +71,8 @@ export default {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'hero-gradient': 'linear-gradient(to bottom right, #3b82f6, #1d4ed8)',
+        'hero-gradient': 'linear-gradient(to bottom right, #F97373, #0F172A)',
+        'luxe-gradient': 'linear-gradient(135deg, #F97373 0%, #0F172A 100%)',
       },
       keyframes: {
         "accordion-down": {

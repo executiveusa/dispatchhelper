@@ -13,6 +13,7 @@ import Dispatch from "./pages/Dispatch";
 import Pricing from "./pages/Pricing";
 import ChatPage from "./pages/ChatPage";
 import AiDispatch from "./pages/AiDispatch";
+import CommandCenter from "./pages/CommandCenter";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/booking" element={<Booking />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/dispatch" element={<Dispatch />} />
+            <Route path="/command-center" element={<CommandCenter />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/ai-dispatch" element={<AiDispatch />} />
