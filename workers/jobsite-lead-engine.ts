@@ -158,26 +158,25 @@ export async function runJobsiteLeadEngine() {
 
     if (!result.data?.id) continue;
 
-    const { data: lead } = await db.from("leads").insert({
-      name: "Jobsite discovery",
-      company: candidate.generalContractor || "Unknown contractor",
-      role: "Superintendent",
-      phone: "unknown",
-      email: "unknown",
-      site: candidate.address,
-      riders: 1,
-      source: "jobsite-lead-engine",
-      page: candidate.sourceUrl,
-      score,
-      score_reason: classification.reason,
-      status: "research",
-      drafted_reply_en: drafts.en,
-      drafted_reply_es: drafts.es,
-    }).select("id").single();
-
-    if (lead?.id) {
-      await db.from("jobsites").update({ lead_id: lead.id }).eq("id", result.data.id);
-    }
+    await db.from("outreach_drafts").delete().eq("jobsite_id", result.data.id).eq("status", "draft");
+    await db.from("outreach_drafts").insert([
+      {
+        jobsite_id: result.data.id,
+        contact_role: "superintendent",
+        language: "en",
+        subject: `Crew parking at ${candidate.address}`,
+        body: drafts.en,
+        status: "draft",
+      },
+      {
+        jobsite_id: result.data.id,
+        contact_role: "superintendent",
+        language: "es",
+        subject: `Estacionamiento de cuadrilla en ${candidate.address}`,
+        body: drafts.es,
+        status: "draft",
+      },
+    ]);
 
     if (classification.reviewRequired) {
       await db.from("review_queue").insert({
