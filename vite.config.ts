@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
-  resolve: {
+  build: {\n    rollupOptions: {\n      input: {\n        landing: path.resolve(__dirname, "index.html"),\n        desk: path.resolve(__dirname, "desk.html"),\n      },\n    },\n  },\n  resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
