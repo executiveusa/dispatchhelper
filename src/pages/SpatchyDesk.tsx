@@ -21,7 +21,7 @@ export default function SpatchyDesk() {
   const [tab, setTab] = useState<Tab>("Leads");
   const [leads, setLeads] = useState<Row[]>([]);
   const [jobsites, setJobsites] = useState<Row[]>([]);
-  const [accounts, setAccounts] = useState<Row[]>([]);
+  const [accounts, setAccounts] = useState<Row[]>([]);\n  const [drafts, setDrafts] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -29,28 +29,28 @@ export default function SpatchyDesk() {
     setLoading(true);
     setError("");
     const db = supabase as any;
-    const [l, j, a] = await Promise.all([
+    const [l, j, a, d] = await Promise.all([
       db.from("leads").select("*").order("created_at", { ascending: false }).limit(200),
       db.from("jobsites").select("*").order("created_at", { ascending: false }).limit(200),
       db.from("accounts").select("*").order("created_at", { ascending: false }).limit(200),
     ]);
-    const firstError = l.error || j.error || a.error;
+    const firstError = l.error || j.error || a.error || d.error;
     if (firstError) setError(firstError.message || "Could not load desk data.");
     setLeads(l.data || []);
     setJobsites(j.data || []);
-    setAccounts(a.data || []);
+    setAccounts(a.data || []);\n    setDrafts(d.data || []);
     setLoading(false);
   }
 
   useEffect(() => { void load(); }, []);
 
   const counts = useMemo(() => ({
-    leads: leads.length,
+    leads: leads.length + drafts.filter((x) => x.status === "draft").length,
     review: jobsites.filter((x) => x.review_required).length,
     active: accounts.filter((x) => x.status === "active").length,
-  }), [leads, jobsites, accounts]);
+  }), [leads, drafts, jobsites, accounts]);
 
-  async function approveLead(id: string) {
+  async function approveDraft(id: string) {\n    const db = supabase as any;\n    const { error } = await db.from("outreach_drafts").update({ status: "approved", approved_at: new Date().toISOString() }).eq("id", id);\n    if (error) setError(error.message); else await load();\n  }\n\n  async function approveLead(id: string) {
     const db = supabase as any;
     const { error } = await db.from("leads").update({
       approved_at: new Date().toISOString(),
@@ -131,6 +131,26 @@ export default function SpatchyDesk() {
                 )}
               </article>
             ))}</div> : <Empty label="Leads" />
+          )}
+
+          {!loading && tab === "Leads" && drafts.length > 0 && (
+            <div className="mt-6 space-y-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Discovery outreach drafts</h2>
+              {drafts.map((draft) => (
+                <article key={draft.id} className="rounded-lg border bg-card p-4 shadow-sm">
+                  <div className="flex flex-wrap items-start gap-3">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-semibold">{fmt(draft.jobsites?.general_contractor)}</div>
+                      <div className="text-sm text-muted-foreground">{fmt(draft.jobsites?.address)} · {fmt(draft.contact_role)} · {fmt(draft.language).toUpperCase()}</div>
+                    </div>
+                    <Badge variant="outline">{fmt(draft.status)}</Badge>
+                  </div>
+                  <div className="mt-3 text-sm font-medium">{fmt(draft.subject)}</div>
+                  <pre className="mt-2 whitespace-pre-wrap rounded-md bg-muted p-3 text-xs">{fmt(draft.body)}</pre>
+                  {draft.status === "draft" && <div className="mt-3"><Button size="sm" onClick={() => void approveDraft(draft.id)}>Approve draft</Button></div>}
+                </article>
+              ))}
+            </div>
           )}
 
           {!loading && tab === "Jobsites" && (
