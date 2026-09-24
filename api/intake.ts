@@ -71,24 +71,17 @@ export default async function handler(req: any, res: any) {
   const ipHash = createHash("sha256").update(`${salt}:${getIp(req)}`).digest("hex");
   const windowStarted = new Date(Math.floor(Date.now() / WINDOW_MS) * WINDOW_MS).toISOString();
 
-  const { data: rateRow } = await supabase
-    .from("intake_rate_limits")
-    .select("request_count")
-    .eq("ip_hash", ipHash)
-    .eq("window_started_at", windowStarted)
-    .maybeSingle();
-
-  const nextCount = (rateRow?.request_count ?? 0) + 1;
-  if (nextCount > MAX_REQUESTS) {
-    return res.status(429).json({ ok: false, error: "rate_limited" });
-  }
-
-  const { error: rateError } = await supabase
-    .from("intake_rate_limits")
-    .upsert({ ip_hash: ipHash, window_started_at: windowStarted, request_count: nextCount });
+  const { data: allowed, error: rateError } = await supabase.rpc("consume_intake_rate_limit", {
+    p_ip_hash: ipHash,
+    p_window_started_at: windowStarted,
+    p_max_requests: MAX_REQUESTS,
+  });
 
   if (rateError) {
     return res.status(503).json({ ok: false, error: "rate_limit_store_failed" });
+  }
+  if (!allowed) {
+    return res.status(429).json({ ok: false, error: "rate_limited" });
   }
 
   const record = {
