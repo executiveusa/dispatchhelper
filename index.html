@@ -2,294 +2,159 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Daily Crew Shuttles for Palm Beach Jobsites · Molly's Trolleys</title>
-<meta name="description" content="Daily crew shuttles from your staging lot to the jobsite. Three round trips a day, Monday to Friday, across Palm Beach County.">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SPATCHY · Palm Beach Crew Shuttle Service</title>
+<meta name="description" content="Daily crew shuttle service for Palm Beach County jobsites. Request a route plan from Molly's Trolleys / Palm Beach Tours & Transportation.">
+<link rel="icon" href="/spatchy-icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#F1F1EE;--paper-2:#E7E7E2;--card:#FBFBF9;--ink:#0E1116;--ink-2:#3C434D;--ink-3:#5E6671;
-  --line:#D6D6D0;--line-2:#BEBEB6;--signal:#F2541B;--signal-deep:#B83A0C;--signal-soft:#FCE3D8;
-  --night:#0E1116;--night-2:#171B22;--night-line:#2A303A;--night-ink:#EEF0F2;--night-ink-2:#A7AEB8;
-  --focus:#2F6FEB;
-  --display:"Archivo",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  --body:"Archivo",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --r:10px;--r-l:18px;
-  --ease:cubic-bezier(.16,1,.3,1);
-  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
-  color-scheme:light;
+  --paper:#F1F1EE;--card:#FBFBF9;--ink:#0E1116;--muted:#5E6671;--line:#D4D4CE;
+  --orange:#F2541B;--orange-dark:#B83A0C;--night:#0E1116;--night2:#171B22;--white:#FFF;
+  --focus:#2F6FEB;--r:16px;--display:"Archivo",system-ui,sans-serif;--mono:"IBM Plex Mono",monospace;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#0F1216;--paper-2:#161A20;--card:#171B22;--ink:#EEF0F2;--ink-2:#BCC3CC;--ink-3:#8E96A1;--line:#29303A;--line-2:#3A424E;
-  --signal:#FF6A33;--signal-deep:#FF8A5C;--signal-soft:#3A1E13;--night:#07090C;--night-2:#11151A;color-scheme:dark}}
-:root[data-theme="dark"]{--paper:#0F1216;--paper-2:#161A20;--card:#171B22;--ink:#EEF0F2;--ink-2:#BCC3CC;--ink-3:#8E96A1;--line:#29303A;--line-2:#3A424E;
-  --signal:#FF6A33;--signal-deep:#FF8A5C;--signal-soft:#3A1E13;--night:#07090C;--night-2:#11151A;color-scheme:dark}
-*,*::before,*::after{box-sizing:inherit}
-html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
-body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--body);font-stretch:100%;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-::selection{background:var(--signal);color:#fff}
-:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}
-a{color:inherit;text-underline-offset:4px;text-decoration-thickness:1px}
-img,svg{max-width:100%;display:block}
-.wrap{width:min(1200px,100% - 48px);margin-inline:auto}
-.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
-h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
-h1{font-stretch:108%;font-weight:760;font-size:clamp(2.35rem,5.2vw,4.6rem);line-height:.98;letter-spacing:-.035em}
-h2{font-stretch:108%;font-weight:720;font-size:clamp(2rem,4vw,3.3rem);line-height:1.02;letter-spacing:-.03em}
-h3{font-stretch:104%;font-weight:680;font-size:1.2rem;line-height:1.2;letter-spacing:-.01em}
-p{margin:0}
-.lede{font-size:clamp(1.08rem,1.6vw,1.28rem);color:var(--ink-2);max-width:54ch;line-height:1.5}
-
-/* buttons */
-.btn{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 22px;border-radius:999px;font:650 16px/1 var(--body);text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .2s var(--ease),background .2s,box-shadow .2s}
-.btn svg{width:18px;height:18px;transition:transform .25s var(--ease)}
-.btn:hover svg{transform:translateX(3px)}
-.btn-primary{background:var(--ink);color:var(--paper);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 10px 24px -12px rgba(14,17,22,.55)}
-.btn-primary:hover{transform:translateY(-1px)}
-.btn-primary .dot{width:8px;height:8px;border-radius:50%;background:var(--signal);box-shadow:0 0 0 4px color-mix(in srgb,var(--signal) 25%,transparent)}
-.btn-ghost{border-color:var(--line-2);color:var(--ink);background:transparent}
-.btn-ghost:hover{background:var(--paper-2)}
-
-/* nav */
-.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid transparent;transition:border-color .2s;padding-top:env(safe-area-inset-top,0px);top:0}
-.nav.scrolled{border-bottom-color:var(--line)}
-.nav .wrap{display:flex;align-items:center;gap:28px;height:72px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:760 17px/1 var(--display);font-stretch:112%;letter-spacing:-.02em}
-.brand-mark{width:30px;height:30px;border-radius:8px;background:var(--ink);display:grid;place-items:center}
-.brand-mark svg{width:20px;height:20px}
-.brand small{display:block;font:500 12px/1.2 var(--body);font-stretch:100%;letter-spacing:0;color:var(--ink-3);margin-top:3px}
-.nav-links{display:flex;gap:24px;margin-left:auto}
-.nav-links a{text-decoration:none;color:var(--ink-2);font-weight:550;font-size:15px}
-.nav-links a:hover{color:var(--ink)}
-.lang{display:inline-flex;border:1px solid var(--line-2);border-radius:999px;padding:3px}
-.lang button{border:0;background:none;padding:6px 11px;border-radius:999px;font:600 13px var(--body);color:var(--ink-3);cursor:pointer}
-.lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
-.nav .btn{min-height:42px;padding:0 18px;font-size:15px}
-
-/* hero */
-.hero{padding:clamp(40px,7vw,96px) 0 clamp(48px,7vw,88px)}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,5vw,72px);align-items:center}
-.hero h1 .quiet{color:var(--ink-3)}
-.hero .lede{margin-top:24px}
-.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px;align-items:center}
-.hero-facts{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:34px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-2);font-size:15px}
-.hero-facts span{display:inline-flex;align-items:center;gap:8px}
-.hero-facts svg{width:17px;height:17px;color:var(--signal-deep)}
-
-/* the route board — signature */
-.board{position:relative;background:var(--night);color:var(--night-ink);border-radius:var(--r-l);padding:22px;box-shadow:0 40px 80px -40px rgba(14,17,22,.55),0 0 0 1px rgba(255,255,255,.04) inset;overflow:hidden;isolation:isolate}
-.board::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--night-line) 1px,transparent 1px),linear-gradient(90deg,var(--night-line) 1px,transparent 1px);background-size:28px 28px;opacity:.35;z-index:-1;mask-image:radial-gradient(120% 90% at 70% 20%,#000 30%,transparent 80%)}
-.board-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.board-title{font:600 13px var(--mono);color:var(--night-ink-2);letter-spacing:.02em}
-.live{display:inline-flex;align-items:center;gap:8px;font:600 12px var(--mono);color:#FFB597}
-.live i{width:7px;height:7px;border-radius:50%;background:var(--signal);animation:pulse 2s var(--ease) infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(242,84,27,.6)}80%,100%{box-shadow:0 0 0 9px rgba(242,84,27,0)}}
-.route-svg{margin:14px 0 6px;width:100%;height:auto}
-.route-svg .path{fill:none;stroke:var(--night-line);stroke-width:10;stroke-linecap:round}
-.route-svg .path-lit{fill:none;stroke:var(--signal);stroke-width:3;stroke-linecap:round;stroke-dasharray:1 12}
-.route-svg text{font:600 12px var(--mono);fill:var(--night-ink-2)}
-.route-svg .stop-name{font:700 14px var(--body);fill:var(--night-ink)}
-.times{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
-.trip{background:var(--night-2);border:1px solid var(--night-line);border-radius:10px;padding:10px 12px;transition:border-color .3s,background .3s}
-.trip b{display:block;font:600 15px var(--mono);color:var(--night-ink)}
-.trip span{font-size:12.5px;color:var(--night-ink-2)}
-.trip.on{border-color:var(--signal);background:color-mix(in srgb,var(--signal) 12%,var(--night-2))}
-.board-foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--night-line);font:500 12px var(--mono);color:var(--night-ink-2)}
-
-/* sections */
-section{position:relative}
-.sec{padding:clamp(72px,10vw,136px) 0}
-.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 64px;align-items:end;margin-bottom:clamp(36px,5vw,64px)}
-.sec-head p{color:var(--ink-2);max-width:52ch}
-.sec-head p strong{display:block;margin-top:12px;color:var(--ink);font-weight:600}
-
-/* strikes */
-.strikes-sec{background:var(--night);color:var(--night-ink)}
-.strikes-sec .sec-head p{color:var(--night-ink-2)}
-.strikes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--night-line);border-radius:var(--r-l);overflow:hidden}
-.strike{padding:28px 24px 26px;border-left:1px solid var(--night-line);display:flex;flex-direction:column;gap:14px;min-height:230px}
-.strike:first-child{border-left:0}
-.strike .mark{display:flex;gap:6px}
-.strike .mark i{width:28px;height:8px;border-radius:2px;background:var(--night-line)}
-.strike .mark i.x{background:var(--signal)}
-.strike .k{font:600 12.5px var(--mono);color:var(--night-ink-2)}
-.strike h3{font-size:1.35rem;color:var(--night-ink)}
-.strike p{color:var(--night-ink-2);font-size:15px;margin-top:auto}
-.strike.stop{background:var(--signal);border-color:var(--signal)}
-.strike.stop h3,.strike.stop p,.strike.stop .k{color:#1A0A03}
-.strike.stop .mark i{background:#1A0A03}
-.src{margin-top:22px;font-size:14px;color:var(--night-ink-2)}
-.src a{color:var(--night-ink)}
-.also{margin-top:44px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;padding:22px 24px;border:1px dashed var(--night-line);border-radius:var(--r)}
-.also svg{width:22px;height:22px;color:var(--signal)}
-.also p{color:var(--night-ink-2);font-size:15.5px}
-.also strong{color:var(--night-ink);font-weight:650}
-
-/* how */
-.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
-.step{padding:32px 28px 8px 0;display:flex;flex-direction:column;gap:14px}
-.step + .step{padding-left:28px;border-left:1px solid var(--line)}
-.step .n{font:600 13px var(--mono);color:var(--signal-deep)}
-.step p{color:var(--ink-2)}
-
-/* planner */
-.planner{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;box-shadow:0 30px 60px -40px rgba(14,17,22,.35)}
-.planner-in{padding:clamp(24px,3.5vw,40px);display:flex;flex-direction:column;gap:26px;border-right:1px solid var(--line)}
-.planner-out{padding:clamp(24px,3.5vw,40px);background:var(--paper-2);display:flex;flex-direction:column;gap:22px}
-.range label{display:flex;justify-content:space-between;align-items:baseline;font-weight:600;margin-bottom:12px}
-.range output{font:600 28px var(--mono);letter-spacing:-.03em}
-input[type=range]{width:100%;accent-color:var(--signal);height:28px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.55 var(--display);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-underline-offset:3px}
+img,svg{display:block;max-width:100%}
+button,input,select,textarea{font:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.wrap{width:min(1180px,calc(100% - 40px));margin:auto}
+.nav{position:sticky;top:0;z-index:20;background:rgba(241,241,238,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .wrap{height:74px;display:flex;align-items:center;gap:24px}
+.brand img{width:154px;height:auto}
+.operator{font-size:12px;color:var(--muted);margin-left:-8px}
+.links{display:flex;gap:22px;margin-left:auto}
+.links a{text-decoration:none;font-size:14px;font-weight:600}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px}
+.lang button{border:0;background:transparent;border-radius:999px;padding:6px 10px;cursor:pointer;font-size:12px;font-weight:700}
+.lang button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 18px;border-radius:999px;border:1px solid transparent;text-decoration:none;font-weight:700;cursor:pointer}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-secondary{border-color:var(--line);background:transparent}
+.btn-orange{background:var(--orange);color:#130801}
+.eyebrow{font:600 12px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--orange-dark)}
+h1,h2,h3{margin:0;line-height:1.02;letter-spacing:-.035em}
+h1{font-size:clamp(2.7rem,6vw,5.4rem);font-weight:800;max-width:10ch}
+h2{font-size:clamp(2rem,4.5vw,3.7rem);font-weight:800;max-width:14ch}
+h3{font-size:1.1rem;letter-spacing:-.01em}
+.lede{font-size:clamp(1.05rem,1.5vw,1.25rem);color:#3F4650;max-width:56ch}
+.hero{padding:72px 0 84px}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.hero .lede{margin-top:22px}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.facts{display:flex;flex-wrap:wrap;gap:12px 26px;padding-top:22px;margin-top:30px;border-top:1px solid var(--line);font-size:14px;color:#414852}
+.route-board{background:var(--night);color:#fff;border-radius:22px;padding:24px;box-shadow:0 30px 70px -38px #000}
+.board-head{display:flex;justify-content:space-between;gap:16px;font:600 12px var(--mono);color:#AEB5BE}
+.route-line{margin:20px 0}
+.times{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.time{padding:12px;border:1px solid #2A303A;background:var(--night2);border-radius:10px}
+.time b{display:block;font:600 15px var(--mono)}
+.time span{font-size:12px;color:#AEB5BE}
+.board-note{font-size:12px;color:#AEB5BE;margin-top:12px}
+.sec{padding:90px 0}
+.sec-dark{background:var(--night);color:#fff}
+.sec-dark .lede,.sec-dark p{color:#B8BEC7}
+.grid-2{display:grid;grid-template-columns:.9fr 1.1fr;gap:54px;align-items:start}
+.strikes{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#2A303A;border:1px solid #2A303A;border-radius:16px;overflow:hidden;margin-top:34px}
+.strike{background:#151A21;padding:24px}
+.strike .n{font:600 12px var(--mono);color:#FF8A5C}
+.strike h3{margin-top:12px;color:#fff}
+.strike p{margin:12px 0 0;color:#ADB4BE;font-size:14px}
+.solution{margin-top:18px;padding:18px 20px;border:1px solid #36404D;border-radius:14px;background:#10151B;color:#F5F6F7}
+.source{margin-top:16px;font-size:13px;color:#AEB5BE}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+.step{border-top:2px solid var(--ink);padding-top:18px}
+.step .n{font:600 12px var(--mono);color:var(--orange-dark)}
+.step p{color:#59616B}
+.planner{margin-top:34px;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:grid;grid-template-columns:.9fr 1.1fr;background:var(--card)}
+.planner-in,.planner-out{padding:30px}
+.planner-in{border-right:1px solid var(--line)}
+.control{margin-bottom:24px}
+.control label,.fieldset{display:block;font-weight:700;margin-bottom:10px}
+input[type=range]{width:100%;accent-color:var(--orange)}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{border:1px solid var(--line-2);background:transparent;border-radius:999px;padding:9px 16px;font:600 14.5px var(--body);cursor:pointer;color:var(--ink-2)}
-.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
-.fieldset-l{font-weight:600;margin-bottom:12px;display:block}
-.result{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-.result div{background:var(--card);padding:18px 16px}
-.result b{display:block;font:600 clamp(28px,3.4vw,40px)/1 var(--mono);letter-spacing:-.04em}
-.result span{display:block;margin-top:8px;font-size:13.5px;color:var(--ink-3)}
-.fleet-row{display:flex;flex-wrap:wrap;gap:8px}
-.bus{width:54px;height:30px;color:var(--ink);transition:transform .35s var(--ease),opacity .35s}
-.bus.in{animation:roll .45s var(--ease) both}
-@keyframes roll{from{transform:translateX(-10px);opacity:0}to{transform:none;opacity:1}}
-.fine{font-size:13.5px;color:var(--ink-3)}
-
-/* terms spec sheet */
-.spec{border-top:2px solid var(--ink)}
-.spec-row{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr) auto;gap:24px;padding:22px 0;border-bottom:1px solid var(--line);align-items:baseline}
-.spec-row h3{font-size:1.1rem}
-.spec-row p{color:var(--ink-2)}
-.spec-row .v{font:600 15px var(--mono);white-space:nowrap;color:var(--ink)}
-
-/* proof */
-.proof{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:20px}
-.proof-main{background:var(--ink);color:var(--paper);border-radius:var(--r-l);padding:clamp(28px,4vw,48px);display:flex;flex-direction:column;gap:26px;min-height:360px;position:relative;overflow:hidden}
-.proof-main .k{font:600 13px var(--mono);color:#FFB597;display:flex;align-items:center;gap:8px}
-.proof-main .k i{width:7px;height:7px;border-radius:50%;background:var(--signal)}
-.proof-main h3{font-size:clamp(1.6rem,3vw,2.4rem);font-stretch:110%;line-height:1.05;letter-spacing:-.025em;max-width:18ch}
-.proof-main dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:auto 0 0;padding-top:22px;border-top:1px solid rgba(255,255,255,.14)}
-.proof-main dt{font-size:13px;color:rgba(238,240,242,.62)}
-.proof-main dd{margin:4px 0 0;font:600 17px var(--mono)}
-.proof-side{display:grid;gap:20px}
-.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:26px;display:flex;flex-direction:column;gap:10px}
-.pcard b{font:720 clamp(2.2rem,4vw,3rem)/1 var(--display);font-stretch:112%;letter-spacing:-.04em}
-.pcard p{color:var(--ink-2);font-size:15.5px}
-.pcard .qt{font:600 1.15rem/1.35 var(--display);font-stretch:104%;color:var(--ink);letter-spacing:-.01em}
-.proof-side{grid-template-rows:auto auto auto}
-
-/* faq */
-.faq{border-top:1px solid var(--line)}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:8px 14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.results{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.result{background:#fff;padding:18px}
+.result b{display:block;font:600 34px/1 var(--mono)}
+.result span{font-size:13px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin-top:18px}
+.spec{border-top:2px solid var(--ink);margin-top:34px}
+.spec-row{display:grid;grid-template-columns:.8fr 1.3fr;gap:28px;padding:20px 0;border-bottom:1px solid var(--line)}
+.spec-row p{margin:0;color:#545C66}
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+.proof-card{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:24px}
+.proof-card b{font-size:1.15rem}
+.proof-card p{color:#555D67;margin:10px 0 0}
+.faq{border-top:1px solid var(--line);margin-top:32px}
 .faq details{border-bottom:1px solid var(--line)}
-.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;font:650 1.1rem/1.3 var(--display);font-stretch:104%}
+.faq summary{cursor:pointer;list-style:none;padding:20px 0;font-weight:700;display:flex;justify-content:space-between;gap:20px}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary .pm{width:28px;height:28px;flex:none;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;transition:transform .3s var(--ease),background .2s}
-.faq details[open] summary .pm{transform:rotate(45deg);background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.faq .a{padding:0 0 24px;color:var(--ink-2);max-width:72ch}
-
-/* form */
-.cta-sec{background:var(--night);color:var(--night-ink)}
-.cta-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(32px,5vw,72px);align-items:start}
-.cta-sec .lede{color:var(--night-ink-2)}
-.promise{margin-top:32px;display:grid;gap:14px}
-.promise div{display:grid;grid-template-columns:28px 1fr;gap:12px;color:var(--night-ink-2);font-size:15.5px}
-.promise b{color:var(--night-ink);font-weight:650}
-.promise svg{width:20px;height:20px;color:var(--signal);margin-top:2px}
-.call{margin-top:34px;padding-top:22px;border-top:1px solid var(--night-line);font-size:15px;color:var(--night-ink-2)}
-.call a{display:block;margin-top:6px;font:600 24px var(--mono);color:var(--night-ink);text-decoration:none;letter-spacing:-.02em}
-form{background:var(--card);color:var(--ink);border-radius:var(--r-l);padding:clamp(22px,3.2vw,36px);display:grid;grid-template-columns:1fr 1fr;gap:16px 16px;box-shadow:0 40px 80px -40px rgba(0,0,0,.6)}
+.faq .answer{padding:0 0 20px;color:#555D67;max-width:72ch}
+.cta-section{background:var(--night);color:#fff}
+.cta-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:54px;align-items:start}
+.cta-section .lede{color:#B8BEC7}
+form{background:#fff;color:var(--ink);border-radius:18px;padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .f{display:flex;flex-direction:column;gap:7px}
 .f.full{grid-column:1/-1}
-.f label{font-weight:600;font-size:14.5px}
-.f label em{font-style:normal;color:var(--ink-3);font-weight:500}
-.f input,.f select,.f textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:var(--r);padding:12px 14px;min-height:50px;width:100%}
+.f label{font-weight:700;font-size:14px}
+.f input,.f select,.f textarea{border:1px solid #BFC2BC;border-radius:10px;background:#F5F5F2;min-height:48px;padding:11px 12px}
 .f textarea{min-height:96px;resize:vertical}
-.f input:focus,.f select:focus,.f textarea:focus{outline:2px solid var(--focus);outline-offset:0;border-color:transparent;background:var(--card)}
-.f .err{font-size:13px;color:#B42318;min-height:0}
-.f.bad input,.f.bad select{border-color:#B42318}
-.form-foot{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-top:6px}
-.form-foot .btn{min-height:56px;padding:0 26px}
-.form-foot .fine{max-width:34ch}
-.done{grid-column:1/-1;display:none;flex-direction:column;gap:14px;padding:12px 0}
-.done h3{font-size:1.6rem;font-stretch:110%}
-.done .sum{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;font:14px/1.6 var(--mono);white-space:pre-wrap;color:var(--ink-2)}
-form.sent .f,form.sent .form-foot{display:none}
-form.sent .done{display:flex}
-
-footer{background:var(--night);color:var(--night-ink-2);border-top:1px solid var(--night-line);padding:36px 0 calc(36px + env(safe-area-inset-bottom,0px));font-size:14px}
-footer .wrap{display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-between}
-footer b{color:var(--night-ink);font-weight:650}
-
-/* reveal: content is visible by default; motion only enhances */
-.rv{transition:opacity .8s var(--ease),transform .8s var(--ease)}
-.js .rv:not(.in){opacity:0;transform:translateY(14px)}
-
-/* mobile composition */
-@media (max-width:980px){
-  .hero-grid,.sec-head,.planner,.proof,.cta-grid{grid-template-columns:minmax(0,1fr)}
+.f .err{color:#B42318;font-size:12px;min-height:1em}
+.form-foot{grid-column:1/-1;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.form-status{grid-column:1/-1;display:none;border-radius:12px;padding:16px}
+.form-status.ok{display:block;background:#E9F7ED;color:#173B20}
+.form-status.bad{display:block;background:#FDECEC;color:#6E1E1E}
+footer{padding:32px 0;border-top:1px solid var(--line);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.mobile-bar{display:none}
+@media(max-width:900px){
+  .links,.operator{display:none}
+  .hero-grid,.grid-2,.planner,.cta-grid{grid-template-columns:1fr}
   .planner-in{border-right:0;border-bottom:1px solid var(--line)}
-  .strikes{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .strike:nth-child(3){border-left:0}
-  .strike:nth-child(n+3){border-top:1px solid var(--night-line)}
-  .nav-links{display:none}
+  .steps,.proof-grid{grid-template-columns:1fr}
+  .strikes{grid-template-columns:1fr}
+  .brand img{width:135px}
 }
-@media (max-width:640px){
-  body{font-size:16px}
-  .wrap{width:min(1200px,100% - 32px)}
-  .nav .wrap{gap:12px;height:64px}
-  .brand small{display:none}
-  .nav .btn{display:none}
+@media(max-width:640px){
+  .wrap{width:min(100% - 28px,1180px)}
+  .nav .wrap{height:66px;gap:10px}
+  .nav .btn-primary{display:none}
   .lang{margin-left:auto}
-  .hero-ctas .btn{width:100%;justify-content:center}
-  .times{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-  .trip{padding:8px}
-  .trip span{font-size:11.5px}
-  .strikes{grid-template-columns:minmax(0,1fr)}
-  .strike{border-left:0!important;min-height:0}
-  .strike + .strike{border-top:1px solid var(--night-line)}
-  .steps{grid-template-columns:minmax(0,1fr)}
-  .step,.step + .step{padding:24px 0;border-left:0}
-  .step + .step{border-top:1px solid var(--line)}
-  .spec-row{grid-template-columns:minmax(0,1fr);gap:6px}
-  .proof-main dl{grid-template-columns:minmax(0,1fr)}
-  form{grid-template-columns:minmax(0,1fr)}
-  .form-foot .btn{width:100%;justify-content:center}
-  .mbar{display:flex}
+  .hero{padding:48px 0 64px}
+  .sec{padding:68px 0}
+  .ctas .btn{width:100%}
+  .facts{display:grid;gap:8px}
+  .times,.results{grid-template-columns:1fr}
+  form{grid-template-columns:1fr}
+  .form-foot{align-items:stretch;flex-direction:column}
+  .form-foot .btn{width:100%}
+  .mobile-bar{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:40;gap:8px}
+  .mobile-bar .btn:first-child{flex:1}
 }
-.mbar{display:none;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:30;gap:8px;transform:translateY(140%);transition:transform .35s var(--ease)}
-.mbar.show{transform:none}
-.mbar .btn{flex:1;justify-content:center;min-height:52px}
-.mbar .btn-ghost{flex:0 0 auto;background:var(--card)}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-  <symbol id="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
-  <symbol id="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 7"/></symbol>
-  <symbol id="clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
-  <symbol id="shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.5l7 3v5.2c0 4.3-3 7.7-7 8.8-4-1.1-7-4.5-7-8.8V6.5z"/></symbol>
-  <symbol id="seat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="17" height="10" rx="2.5"/><path d="M3.5 11h17M7 16v2.5M17 16v2.5"/></symbol>
-  <symbol id="alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.2v.3"/></symbol>
-  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/></symbol>
-  <symbol id="coach" viewBox="0 0 54 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="3" width="50" height="19" rx="4"/><path d="M2 12h50M9 3v9M17 3v9M25 3v9M33 3v9M41 3v9"/><circle cx="13" cy="24.5" r="3" fill="var(--card)"/><circle cx="41" cy="24.5" r="3" fill="var(--card)"/></symbol>
-</defs></svg>
-
-<header class="nav" id="nav">
+<header class="nav">
   <div class="wrap">
-    <a class="brand" href="#top" aria-label="Crew Shuttle by Molly's Trolleys, home">
-      <span class="brand-mark"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="9" rx="2" stroke="#F2541B" stroke-width="1.8"/><path d="M2 8.5h16" stroke="#F2541B" stroke-width="1.8"/><circle cx="6" cy="15.5" r="1.6" fill="#F2541B"/><circle cx="14" cy="15.5" r="1.6" fill="#F2541B"/></svg></span>
-      <span><span data-i="brand">Crew Shuttle</span><small data-i="brandSub">by Molly's Trolleys · Palm Beach</small></span>
-    </a>
-    <nav class="nav-links" aria-label="Page">
-      <a href="#why" data-i="navWhy">Why shuttle</a>
-      <a href="#plan" data-i="navPlan">Size your route</a>
-      <a href="#terms" data-i="navTerms">Terms</a>
-      <a href="#faq" data-i="navFaq">FAQ</a>
+    <a class="brand" href="#top" aria-label="SPATCHY home"><img src="/spatchy-logo.svg" alt="SPATCHY"></a>
+    <div class="operator" data-i="operator">Crew shuttle service by Molly's Trolleys</div>
+    <nav class="links" aria-label="Page">
+      <a href="#parking" data-i="navParking">Parking rules</a>
+      <a href="#calculator" data-i="navCalc">Route calculator</a>
+      <a href="#terms" data-i="navTerms">Service terms</a>
+      <a href="#faq" data-i="navFaq">Questions</a>
     </nav>
-    <div class="lang" role="group" aria-label="Language"><button data-lang="en" aria-pressed="true">EN</button><button data-lang="es" aria-pressed="false">ES</button></div>
-    <a class="btn btn-primary" href="#quote"><span class="dot"></span><span data-i="ctaShort">Get a shuttle plan</span></a>
+    <div class="lang" aria-label="Language">
+      <button data-lang="en" aria-pressed="true">EN</button>
+      <button data-lang="es" aria-pressed="false">ES</button>
+    </div>
+    <a class="btn btn-primary" href="#quote" data-i="navCta">Request a shuttle plan</a>
   </div>
 </header>
 
@@ -297,82 +162,106 @@ footer b{color:var(--night-ink);font-weight:650}
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <h1><span data-i="h1a">Daily crew shuttles for Palm Beach jobsites.</span></h1>
-      <p class="lede" data-i="lede">Your crew parks at a staging lot and we run them to the site. Three round trips a day, Monday through Friday, on a route you set with us.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-primary" href="#quote"><span class="dot"></span><span data-i="cta">Get a crew shuttle plan</span><svg><use href="#arrow"/></svg></a>
-        <a class="btn btn-ghost" href="tel:+15616555515"><svg><use href="#i-phone"/></svg><span class="mono">(561) 655-5515</span></a>
+      <div class="eyebrow" data-i="heroEyebrow">Palm Beach County crew transportation</div>
+      <h1 data-i="heroH">Daily crew shuttles from the parking lot to the jobsite.</h1>
+      <p class="lede" data-i="heroP">Your crew parks at a staging lot. We move them to and from the site on a schedule built around your shifts.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#quote" data-i="heroCta">Request a shuttle plan</a>
+        <a class="btn btn-secondary" href="tel:+15616555515" data-i="heroCall">Call dispatch — (561) 655-5515</a>
       </div>
-      <div class="hero-facts">
-        <span><svg><use href="#seat"/></svg><span data-i="f1">25–32 seats per vehicle</span></span>
-        <span><svg><use href="#clock"/></svg><span data-i="f2">Replacement vehicle within 1 hour</span></span>
-        <span><svg><use href="#shield"/></svg><span data-i="f3">DOT-certified, background-checked drivers</span></span>
+      <div class="facts">
+        <span data-i="fact1">25–32 seats per vehicle</span>
+        <span data-i="fact2">Palm Beach County</span>
+        <span data-i="fact3">Monday–Friday service available</span>
       </div>
     </div>
 
-    <figure class="board" aria-label="Example daily shuttle route between a staging lot and a jobsite" style="margin:0">
-      <div class="board-head"><span class="board-title" data-i="boardT">Route 01 · Mon–Fri</span><span class="live"><i></i><span data-i="boardLive">Example schedule</span></span></div>
-      <svg class="route-svg" viewBox="0 0 520 200" role="img" aria-hidden="true">
-        <path id="rp" class="path" d="M60 150 C 160 150, 170 50, 270 60 S 400 150, 460 60"/>
-        <path class="path-lit" d="M60 150 C 160 150, 170 50, 270 60 S 400 150, 460 60"/>
-        <g><rect x="28" y="136" width="64" height="28" rx="8" fill="#171B22" stroke="#2A303A"/><text x="60" y="155" text-anchor="middle">P</text></g>
-        <text class="stop-name" x="28" y="190" data-i-svg="stopA">Staging lot</text>
-        <g><rect x="428" y="44" width="64" height="32" rx="8" fill="#F2541B"/><path d="M445 69v-13l15-7 15 7v13" stroke="#1A0A03" stroke-width="2" fill="none"/></g>
-        <text class="stop-name" x="492" y="100" text-anchor="end" data-i-svg="stopB">Jobsite</text>
-        <g id="shuttle"><rect x="-20" y="-11" width="40" height="22" rx="6" fill="#EEF0F2"/><rect x="-14" y="-6" width="28" height="6" rx="1.5" fill="#0E1116"/><circle cx="-10" cy="12" r="3.2" fill="#F2541B"/><circle cx="10" cy="12" r="3.2" fill="#F2541B"/></g>
-      </svg>
-      <div class="times" id="trips">
-        <div class="trip"><b>06:30</b><span data-i="t1">Crew in</span></div>
-        <div class="trip"><b>11:45</b><span data-i="t2">Midday loop</span></div>
-        <div class="trip"><b>15:30</b><span data-i="t3">Crew out</span></div>
+    <figure class="route-board" aria-label="Example jobsite shuttle route">
+      <div class="board-head">
+        <span data-i="routeTitle">Example jobsite route</span>
+        <span data-i="routeExample">Example only</span>
       </div>
-      <div class="board-foot"><span data-i="bf1">3 round trips · 2 shifts</span><span data-i="bf2">You set the times</span></div>
+      <svg class="route-line" viewBox="0 0 520 210" aria-hidden="true">
+        <path d="M55 160 C160 160 160 48 270 58 S395 160 462 60" fill="none" stroke="#2A303A" stroke-width="12" stroke-linecap="round"/>
+        <path d="M55 160 C160 160 160 48 270 58 S395 160 462 60" fill="none" stroke="#F2541B" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 14"/>
+        <circle cx="55" cy="160" r="16" fill="#F1F1EE"/><text x="55" y="165" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#0E1116">P</text>
+        <rect x="440" y="43" width="44" height="34" rx="8" fill="#F2541B"/>
+        <text x="38" y="200" font-family="Archivo" font-size="13" fill="#D7DCE2" data-i-svg="stopLot">Staging lot</text>
+        <text x="482" y="101" text-anchor="end" font-family="Archivo" font-size="13" fill="#D7DCE2" data-i-svg="stopSite">Jobsite</text>
+      </svg>
+      <div class="times">
+        <div class="time"><b>06:30</b><span data-i="time1">Crew in</span></div>
+        <div class="time"><b>11:45</b><span data-i="time2">Midday</span></div>
+        <div class="time"><b>15:30</b><span data-i="time3">Crew out</span></div>
+      </div>
+      <div class="board-note" data-i="routeNote">Example only. Route and times are set for each jobsite.</div>
     </figure>
   </div>
 </section>
 
-<section class="sec strikes-sec" id="why">
+<section class="sec sec-dark" id="parking">
   <div class="wrap">
-    <div class="sec-head rv">
-      <h2 data-i="whyH">On Palm Beach island, parking can shut your job down.</h2>
-      <p data-i="whyP">Crew vehicles have to park on the private site. When the lot can't hold them, the Town allows street permits for at most three vehicles. Park outside that, and each violation is a strike.</p>
+    <div class="grid-2">
+      <h2 data-i="parkingH">When the crew cannot park at the jobsite, they still have to get there.</h2>
+      <p class="lede" data-i="parkingP">Palm Beach construction sites can have strict parking requirements. On Palm Beach island, unauthorized construction parking can lead to escalating enforcement.</p>
     </div>
-    <div class="strikes rv">
-      <div class="strike"><span class="mark"><i class="x"></i><i></i><i></i></span><span class="k" data-i="s1k">Strike one</span><h3 data-i="s1h">A crew truck on the street</h3><p data-i="s1p">Ticketed by Public Works or Police. The job now needs a construction management agreement with the Town.</p></div>
-      <div class="strike"><span class="mark"><i class="x"></i><i class="x"></i><i></i></span><span class="k" data-i="s2k">Strike two</span><h3 data-i="s2h">The sub who didn't get the memo</h3><p data-i="s2p">One late crew member is enough. Appeals must be filed in writing within seven days.</p></div>
-      <div class="strike"><span class="mark"><i class="x"></i><i class="x"></i><i class="x"></i></span><span class="k" data-i="s3k">Strike three</span><h3 data-i="s3h">Stop Work Order</h3><p data-i="s3p">The zoning director is required by code to issue it. Only the Town Council can restart the project.</p></div>
-      <div class="strike stop"><span class="mark"><i></i><i></i><i></i></span><span class="k" data-i="s4k">With a shuttle</span><h3 data-i="s4h">Zero crew cars on the street</h3><p data-i="s4p">Everyone parks at the staging lot and rides in. The Town's own management agreements name shuttles as the fix.</p></div>
+    <div class="strikes">
+      <article class="strike"><div class="n">01</div><h3 data-i="strike1H">First violation</h3><p data-i="strike1P">Parking violation is documented and the project may be required to address its parking plan.</p></article>
+      <article class="strike"><div class="n">02</div><h3 data-i="strike2H">Second violation</h3><p data-i="strike2P">Another violation counts against the project under the Town's construction parking rules.</p></article>
+      <article class="strike"><div class="n">03</div><h3 data-i="strike3H">Stop Work Order</h3><p data-i="strike3P">The Town's rules provide for a Stop Work Order after the third strike.</p></article>
     </div>
-    <p class="src"><span data-i="srcL">Source:</span> <a href="https://www.townofpalmbeach.com/1324/Park-in-Palm-Beach" target="_blank" rel="noopener" data-i="srcA">Town of Palm Beach, construction parking and the 3-strike rule</a></p>
-    <div class="also rv"><svg><use href="#alert"/></svg><p><strong data-i="alsoS">Downtown West Palm Beach, too.</strong> <span data-i="alsoP">For major projects, the City's conditions of approval can include off-site parking and shuttle operations, and it follows up with developers when subcontractors park in the neighborhoods.</span></p></div>
+    <div class="solution" data-i="parkingSolution">A staging lot and crew shuttle keeps employee vehicles away from the jobsite.</div>
+    <div class="source"><span data-i="sourceLabel">Source:</span> <a href="https://www.townofpalmbeach.com/1324/Park-in-Palm-Beach" target="_blank" rel="noopener" data-i="sourceText">Town of Palm Beach — construction parking requirements</a></div>
   </div>
 </section>
 
-<section class="sec" id="how">
+<section class="sec">
   <div class="wrap">
-    <div class="sec-head rv"><h2 data-i="howH">Set up around your shifts, not ours.</h2><p><span data-i="howP">You own the crew and the site rules. We own the vehicles, the drivers, and showing up on time.</span> <strong data-i="howLocal">One local operator runs your route start to finish, from its own West Palm Beach yard. That is why a replacement can reach you within the hour.</strong></p></div>
-    <div class="steps rv">
-      <div class="step"><span class="n">1</span><h3 data-i="st1h">Send the jobsite and crew count</h3><p data-i="st1p">Address, staging lot if you have one, shift start and end, and how many people ride.</p></div>
-      <div class="step"><span class="n">2</span><h3 data-i="st2h">We build the route with you</h3><p data-i="st2p">Stops, loop times, and trips per day, set around your shifts. You hand riders the schedule and ID procedure.</p></div>
-      <div class="step"><span class="n">3</span><h3 data-i="st3h">Shuttles roll, and flex with the job</h3><p data-i="st3p">Change trips or skip days as the build changes. The driver carries a phone on every run.</p></div>
+    <h2 data-i="howH">Give dispatch the jobsite, crew count and shift times.</h2>
+    <div class="steps">
+      <article class="step"><div class="n">01</div><h3 data-i="how1H">Jobsite</h3><p data-i="how1P">Send the jobsite address, approximate riders per shift, shift times and staging lot if one is already selected.</p></article>
+      <article class="step"><div class="n">02</div><h3 data-i="how2H">Route</h3><p data-i="how2P">Dispatch works out the vehicle count, pickup location, trip schedule and daily service requirements.</p></article>
+      <article class="step"><div class="n">03</div><h3 data-i="how3H">Service</h3><p data-i="how3P">Drivers run the agreed route between the staging lot and jobsite. If the project schedule changes, dispatch updates the plan with you.</p></article>
     </div>
   </div>
 </section>
 
-<section class="sec" id="plan" style="padding-top:0">
+<section class="sec" id="calculator" style="padding-top:0">
   <div class="wrap">
-    <div class="sec-head rv"><h2 data-i="planH">Size your route in ten seconds.</h2><p data-i="planP">Move the slider to your crew size. This is a starting point for the conversation, not a quote.</p></div>
-    <div class="planner rv">
+    <h2 data-i="calcH">Estimate the vehicles needed for your crew.</h2>
+    <p class="lede" style="margin-top:18px" data-i="calcP">Enter the number of riders and planned service schedule. This is a planning estimate, not a quote.</p>
+    <div class="planner">
       <div class="planner-in">
-        <div class="range"><label for="crew"><span data-i="crewL">Riders per shift</span><output id="crewOut" class="mono">40</output></label><input type="range" id="crew" min="5" max="300" step="5" value="40" aria-describedby="crewOut"></div>
-        <div><span class="fieldset-l" data-i="daysL">Service days per week</span><div class="chips" id="days"><button class="chip" data-v="3" aria-pressed="false">3</button><button class="chip" data-v="4" aria-pressed="false">4</button><button class="chip" data-v="5" aria-pressed="true">5</button><button class="chip" data-v="6" aria-pressed="false">6</button></div></div>
-        <div><span class="fieldset-l" data-i="tripsL">Round trips per day</span><div class="chips" id="rt"><button class="chip" data-v="2" aria-pressed="false">2</button><button class="chip" data-v="3" aria-pressed="true">3</button><button class="chip" data-v="4" aria-pressed="false">4</button></div></div>
+        <div class="control">
+          <label for="crew"><span data-i="ridersLabel">Riders per shift</span> · <output id="crewOut" class="mono">40</output></label>
+          <input id="crew" type="range" min="5" max="300" step="5" value="40">
+        </div>
+        <div class="control">
+          <span class="fieldset" data-i="daysLabel">Service days per week</span>
+          <div class="chips" id="days">
+            <button class="chip" type="button" data-v="3" aria-pressed="false">3</button>
+            <button class="chip" type="button" data-v="4" aria-pressed="false">4</button>
+            <button class="chip" type="button" data-v="5" aria-pressed="true">5</button>
+            <button class="chip" type="button" data-v="6" aria-pressed="false">6</button>
+          </div>
+        </div>
+        <div class="control">
+          <span class="fieldset" data-i="tripsLabel">Round trips per day</span>
+          <div class="chips" id="rt">
+            <button class="chip" type="button" data-v="2" aria-pressed="false">2</button>
+            <button class="chip" type="button" data-v="3" aria-pressed="true">3</button>
+            <button class="chip" type="button" data-v="4" aria-pressed="false">4</button>
+          </div>
+        </div>
       </div>
-      <div class="planner-out" aria-live="polite">
-        <div class="result"><div><b id="rVeh">2</b><span data-i="rVehL">vehicles on the loop</span></div><div><b id="rTrips">15</b><span data-i="rTripsL">round trips a week</span></div><div><b id="rCars">40</b><span data-i="rCarsL">cars kept off the street</span></div></div>
-        <div class="fleet-row" id="fleet" aria-hidden="true"></div>
-        <p class="fine" data-i="planFine">Planned at 25 seated riders per vehicle, the low end of our 25–32 seat range, so nobody stands. Every rider who takes the shuttle is one less car on the street.</p>
-        <a class="btn btn-primary" href="#quote" style="align-self:flex-start"><span class="dot"></span><span data-i="planCta">Send this to dispatch</span><svg><use href="#arrow"/></svg></a>
+      <div class="planner-out">
+        <div class="results">
+          <div class="result"><b id="veh">2</b><span data-i="vehLabel">vehicles</span></div>
+          <div class="result"><b id="weekly">15</b><span data-i="weeklyLabel">round trips per week</span></div>
+          <div class="result"><b id="ridersResult">40</b><span data-i="transportedLabel">riders transported per shift</span></div>
+        </div>
+        <p class="note" data-i="calcNote">Vehicle estimate uses 25 seated riders per vehicle. Final vehicle count depends on the route, schedule and vehicle assigned.</p>
+        <a class="btn btn-primary" href="#quote" style="margin-top:22px;align-self:flex-start" data-i="calcCta">Request this route</a>
       </div>
     </div>
   </div>
@@ -380,194 +269,201 @@ footer b{color:var(--night-ink);font-weight:650}
 
 <section class="sec" id="terms" style="padding-top:0">
   <div class="wrap">
-    <div class="sec-head rv"><h2 data-i="termsH">Terms written for a construction schedule.</h2><p data-i="termsP">These come straight from our standard jobsite contract.</p></div>
-    <div class="spec rv">
-      <div class="spec-row"><h3 data-i="tr1h">Skip a day, don't pay for it</h3><p data-i="tr1p">Give 48 hours' notice and unused days aren't charged. Legal holidays flex out of the schedule.</p><span class="v">48 h</span></div>
-      <div class="spec-row"><h3 data-i="tr2h">Breakdown cover</h3><p data-i="tr2p">A replacement vehicle within one hour. If a service day can't be finished, you get a daily credit or a make-up day.</p><span class="v">≤ 1 h</span></div>
-      <div class="spec-row"><h3 data-i="tr3h">Leave when the job does</h3><p data-i="tr3p">Either side can end the agreement with 60 days' written notice.</p><span class="v">60 d</span></div>
-      <div class="spec-row"><h3 data-i="tr4h">Drivers</h3><p data-i="tr4p">DOT-certified and trained, with CDL licenses, background checks, random drug testing, and an annual driving-record check.</p><span class="v">CDL</span></div>
-      <div class="spec-row"><h3 data-i="tr5h">Insurance</h3><p data-i="tr5p">We carry passenger liability coverage and workers' compensation for our drivers.</p><span class="v" data-i="tr5v">Covered</span></div>
-      <div class="spec-row"><h3 data-i="tr6h">Vehicles</h3><p data-i="tr6p">Clean, air-conditioned trolley and coach-style vehicles. Wheelchair lifts available on request.</p><span class="v">25–32</span></div>
+    <h2 data-i="termsH">Service terms</h2>
+    <div class="spec">
+      <div class="spec-row"><h3 data-i="term1H">Schedule changes</h3><p data-i="term1P">Unused service days may be removed with 48 hours' notice, subject to the service agreement.</p></div>
+      <div class="spec-row"><h3 data-i="term2H">Vehicle breakdown</h3><p data-i="term2P">Replacement and service-credit terms are defined in the agreement.</p></div>
+      <div class="spec-row"><h3 data-i="term3H">Cancellation</h3><p data-i="term3P">Either party may terminate with 60 days' written notice under the current agreement template.</p></div>
+      <div class="spec-row"><h3 data-i="term4H">Drivers</h3><p data-i="term4P">Commercial drivers and required operating credentials.</p></div>
+      <div class="spec-row"><h3 data-i="term5H">Insurance</h3><p data-i="term5P">Passenger liability and workers' compensation coverage.</p></div>
+      <div class="spec-row"><h3 data-i="term6H">Vehicles</h3><p data-i="term6P">Trolley and coach-style vehicles.</p></div>
     </div>
   </div>
 </section>
 
-<section class="sec" id="proof" style="padding-top:0">
+<section class="sec" style="padding-top:0">
   <div class="wrap">
-    <div class="proof">
-      <div class="proof-main rv">
-        <span class="k"><i></i><span data-i="pk">Under contract now</span></span>
-        <h3 data-i="ph">Moving a builder's crew to an estate build on Palm Beach island, every weekday.</h3>
-        <dl><div><dt data-i="pd1t">Term</dt><dd>2026 – 2027</dd></div><div><dt data-i="pd2t">Schedule</dt><dd data-i="pd2">Mon–Fri · 2 shifts</dd></div><div><dt data-i="pd3t">Loop</dt><dd data-i="pd3">3 round trips / day</dd></div></dl>
-      </div>
-      <div class="proof-side">
-        <div class="pcard rv"><b>1998</b><p data-i="pc1">Molly's Trolleys has run group transportation in Palm Beach County since 1998.</p></div>
-        <div class="pcard rv"><b data-i="pc2b">Our own yard</b><p data-i="pc2">Vehicles and drivers run out of 800 23rd Street, West Palm Beach, alongside Palm Beach Tours &amp; Transportation. Subcontractors only in emergencies, on the same terms.</p></div>
-        <div class="pcard rv quote"><p class="qt" data-i="pc3">“The driver arrived at the site early and was wonderfully courteous…”</p><p class="fine"><span data-i="pc3s">A theme across 7 reviews on</span> <a href="https://www.yelp.com/biz/mollys-trolleys-west-palm-beach" target="_blank" rel="noopener">Yelp</a></p></div>
-      </div>
+    <h2 data-i="proofH">Operating in Palm Beach County.</h2>
+    <div class="proof-grid">
+      <article class="proof-card"><b data-i="proof1H">West Palm Beach yard</b><p>800 23rd Street<br>West Palm Beach, FL 33407</p></article>
+      <article class="proof-card"><b data-i="proof2H">Current construction shuttle</b><p data-i="proof2P">A Palm Beach construction project currently uses the service for weekday crew transportation.</p></article>
+      <article class="proof-card"><b data-i="proof3H">Molly's Trolleys / PBTT</b><p data-i="proof3P">Local operating team for Palm Beach County transportation.</p></article>
     </div>
   </div>
 </section>
 
 <section class="sec" id="faq" style="padding-top:0">
   <div class="wrap">
-    <div class="sec-head rv"><h2 data-i="faqH">Questions superintendents ask first.</h2><p></p></div>
-    <div class="faq rv">
-      <details><summary><span data-i="q1">Who handles rider IDs and the printed schedule?</span><span class="pm" aria-hidden="true">+</span></summary><div class="a" data-i="a1">You do: your company issues any rider ID procedure and posts the schedule for your crew. We set the routes and times with you and adjust them together as the job changes.</div></details>
-      <details><summary><span data-i="q2">How do you price it?</span><span class="pm" aria-hidden="true">+</span></summary><div class="a" data-i="a2">Per service day, not per rider, based on the number of round trips. A fuel surcharge applies only when average fuel prices rise past set thresholds, and we document the prices whenever it does.</div></details>
-      <details><summary><span data-i="q3">What if a vehicle breaks down?</span><span class="pm" aria-hidden="true">+</span></summary><div class="a" data-i="a3">A replacement vehicle arrives within one hour of the report. If the day can't be completed, you get a daily credit or a make-up day on a date we agree.</div></details>
-      <details><summary><span data-i="q4">Can the shuttle carry tools and materials?</span><span class="pm" aria-hidden="true">+</span></summary><div class="a" data-i="a4">The shuttle is for people. Drivers don't load or unload packages or parcels for riders.</div></details>
-      <details><summary><span data-i="q5">What happens when the job wraps early?</span><span class="pm" aria-hidden="true">+</span></summary><div class="a" data-i="a5">Either side can end the agreement with 60 days' written notice. Any extra trips outside the regular route are booked separately.</div></details>
-      <details><summary><span data-i="q6">Where do you operate?</span><span class="pm" aria-hidden="true">+</span></summary><div class="a" data-i="a6">Palm Beach County, from our yard at 800 23rd Street in West Palm Beach.</div></details>
+    <h2 data-i="faqH">Questions about the service</h2>
+    <div class="faq">
+      <details><summary><span data-i="q1">How is the service priced?</span><span>+</span></summary><div class="answer" data-i="a1">Pricing is based on the route, service days, vehicle requirements and number of daily trips.</div></details>
+      <details><summary><span data-i="q2">Do we need a staging lot before contacting you?</span><span>+</span></summary><div class="answer" data-i="a2">No. If you already have one, include it in the request. If not, tell dispatch what you know about the site and crew.</div></details>
+      <details><summary><span data-i="q3">Who sets the shuttle schedule?</span><span>+</span></summary><div class="answer" data-i="a3">The schedule is built around the project's shift times and agreed with the site team.</div></details>
+      <details><summary><span data-i="q4">Can the shuttle carry construction materials?</span><span>+</span></summary><div class="answer" data-i="a4">The shuttle service is for passengers. Material or package handling is not part of the standard service.</div></details>
+      <details><summary><span data-i="q5">What if the project schedule changes?</span><span>+</span></summary><div class="answer" data-i="a5">Contact dispatch. Service days and trip times can be adjusted subject to the service agreement.</div></details>
+      <details><summary><span data-i="q6">Where do you operate?</span><span>+</span></summary><div class="answer" data-i="a6">Palm Beach County.</div></details>
     </div>
   </div>
 </section>
 
-<section class="sec cta-sec" id="quote">
+<section class="sec cta-section" id="quote">
   <div class="wrap cta-grid">
-    <div class="rv">
-      <h2 data-i="qH">Get a crew shuttle plan for your jobsite.</h2>
-      <p class="lede" style="margin-top:20px" data-i="qP">Tell us where the job is and how many people ride. Dispatch replies with a proposed route, vehicle count, and daily rate.</p>
-      <div class="promise">
-        <div><svg><use href="#check"/></svg><span><b data-i="pr1b">A real route, not a brochure.</b> <span data-i="pr1">Stops, loop times, and vehicles sized to your shifts.</span></span></div>
-        <div><svg><use href="#check"/></svg><span><b data-i="pr2b">One number for the whole job.</b> <span data-i="pr2">Priced per service day.</span></span></div>
-        <div><svg><use href="#check"/></svg><span><b data-i="pr3b">No lock-in.</b> <span data-i="pr3">60 days' notice ends it.</span></span></div>
-      </div>
-      <div class="call"><span data-i="callL">Rather talk it through? Call dispatch.</span><a href="tel:+15616555515">(561) 655-5515</a></div>
+    <div>
+      <div class="eyebrow" data-i="finalEyebrow">Dispatch request</div>
+      <h2 data-i="finalH">Send the jobsite to dispatch.</h2>
+      <p class="lede" style="margin-top:18px" data-i="finalP">Give us the address, crew count and target start date. Dispatch will review the request and contact you about the route and service requirements.</p>
+      <p style="margin-top:28px"><a href="tel:+15616555515" style="font:600 24px var(--mono);color:#fff;text-decoration:none">(561) 655-5515</a></p>
     </div>
-    <form id="qform" class="rv" novalidate>\n      <div style="position:absolute;left:-10000px" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
-      <div class="f"><label for="name" data-i="fName">Your name</label><input id="name" name="name" autocomplete="name" required><span class="err"></span></div>
-      <div class="f"><label for="company" data-i="fCo">Company</label><input id="company" name="company" autocomplete="organization" required><span class="err"></span></div>
-      <div class="f"><label for="role" data-i="fRole">Role</label><select id="role" name="role"><option data-i="ro1">Superintendent</option><option data-i="ro2">Project manager</option><option data-i="ro3">Site logistics</option><option data-i="ro4">Owner's rep</option><option data-i="ro5">Other</option></select></div>
-      <div class="f"><label for="phone" data-i="fPhone">Mobile</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required><span class="err"></span></div>
+
+    <form id="qform" novalidate>
+      <div style="position:absolute;left:-10000px" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+      <div class="f"><label for="name" data-i="fName">Name</label><input id="name" name="name" autocomplete="name" required><span class="err"></span></div>
+      <div class="f"><label for="company" data-i="fCompany">Company</label><input id="company" name="company" autocomplete="organization" required><span class="err"></span></div>
+      <div class="f"><label for="role" data-i="fRole">Role</label><select id="role" name="role"><option>Superintendent</option><option>Project manager</option><option>Site logistics</option><option>Owner's representative</option><option>Other</option></select></div>
+      <div class="f"><label for="phone" data-i="fPhone">Mobile</label><input id="phone" name="phone" type="tel" autocomplete="tel" required><span class="err"></span></div>
       <div class="f full"><label for="email" data-i="fEmail">Work email</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err"></span></div>
-      <div class="f full"><label for="site"><span data-i="fSite">Jobsite address</span></label><input id="site" name="site" autocomplete="street-address" required><span class="err"></span></div>
+      <div class="f full"><label for="site" data-i="fSite">Jobsite address</label><input id="site" name="site" autocomplete="street-address" required><span class="err"></span></div>
       <div class="f"><label for="riders" data-i="fRiders">Riders per shift</label><input id="riders" name="riders" type="number" min="1" inputmode="numeric" required><span class="err"></span></div>
-      <div class="f"><label for="start" data-i="fStart">Target start</label><input id="start" name="start" type="date"></div>
-      <div class="f full"><label for="lot"><span data-i="fLot">Staging lot</span> <em data-i="fLotE">(if you have one)</em></label><input id="lot" name="lot"></div>
-      <div class="f full"><label for="notes"><span data-i="fNotes">Shifts and site rules</span> <em data-i="fNotesE">(optional)</em></label><textarea id="notes" name="notes"></textarea></div>
-      <div class="form-foot"><p class="fine" data-i="fFine">We use this only to plan your route and contact you about it.</p><button class="btn btn-primary" type="submit"><span class="dot"></span><span data-i="fSubmit">Send to dispatch</span><svg><use href="#arrow"/></svg></button></div>
-      <div class="done" role="status" aria-live="polite"><h3 data-i="dH">Request ready for dispatch.</h3><p data-i="dP">Call now and we can walk the route together while you're on site.</p><div class="sum" id="sum"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-primary" href="tel:+15616555515"><svg><use href="#i-phone"/></svg><span class="mono">(561) 655-5515</span></a><button class="btn btn-ghost" type="button" id="copySum" data-i="dCopy">Copy request</button></div></div>
+      <div class="f"><label for="start" data-i="fStart">Target start date</label><input id="start" name="start" type="date"></div>
+      <div class="f full"><label for="lot" data-i="fLot">Staging lot — optional</label><input id="lot" name="lot"></div>
+      <div class="f full"><label for="notes" data-i="fNotes">Shift times or site requirements — optional</label><textarea id="notes" name="notes"></textarea></div>
+      <div class="form-foot">
+        <p class="note" style="margin:0" data-i="privacy">Used only to review your shuttle request and contact you about it.</p>
+        <button class="btn btn-orange" type="submit" data-i="submit">Send to dispatch</button>
+      </div>
+      <div id="statusOk" class="form-status ok" role="status" aria-live="polite"><strong data-i="successH">Request sent to dispatch.</strong><div data-i="successP">Dispatch has your jobsite information. Need to speak with someone now? (561) 655-5515</div></div>
+      <div id="statusBad" class="form-status bad" role="alert"><strong data-i="failH">The request did not send.</strong><div data-i="failP">Try again or call dispatch at (561) 655-5515.</div></div>
     </form>
   </div>
 </section>
 </main>
 
-<footer><div class="wrap"><span><b>Molly's Trolleys</b> · <span data-i="foot1">with Palm Beach Tours &amp; Transportation</span></span><span>800 23rd Street, West Palm Beach, FL 33407 · <a href="tel:+15616555515">(561) 655-5515</a></span></div></footer>
+<footer>
+  <div class="wrap">
+    <span><strong>SPATCHY</strong><br><span data-i="footerOperator">Crew shuttle service operated by Molly's Trolleys / Palm Beach Tours & Transportation</span></span>
+    <span>800 23rd Street · West Palm Beach, FL 33407<br><a href="tel:+15616555515">(561) 655-5515</a></span>
+  </div>
+</footer>
 
-<div class="mbar" id="mbar"><a class="btn btn-primary" href="#quote"><span class="dot"></span><span data-i="ctaShort">Get a shuttle plan</span></a><a class="btn btn-ghost" href="tel:+15616555515" aria-label="Call dispatch"><svg style="width:20px;height:20px"><use href="#i-phone"/></svg></a></div>
+<div class="mobile-bar">
+  <a class="btn btn-primary" href="#quote" data-i="mobileCta">Request a shuttle plan</a>
+  <a class="btn btn-secondary" href="tel:+15616555515" aria-label="Call dispatch">Call</a>
+</div>
 
 <script>
-/* City config: clone this page for a new market by swapping these values and the Why section's source. */
-const SUBMIT_URL = "/api/intake";
-document.documentElement.classList.add("js");
-
-const ES = {
- brand:"Crew Shuttle",brandSub:"por Molly's Trolleys · Palm Beach",navWhy:"Por qué",navPlan:"Calcula tu ruta",navTerms:"Condiciones",navFaq:"Preguntas",ctaShort:"Pide un plan",
- h1a:"Transporte diario de cuadrillas para obras en Palm Beach.",h1b:"Estaciona fuera. Sigue construyendo.",
- lede:"Tu cuadrilla se estaciona en un lote de apoyo y nosotros la llevamos a la obra. Tres viajes redondos al día, de lunes a viernes, en la ruta que acuerdes con nosotros.",
- cta:"Pide un plan de transporte",f1:"25–32 asientos por vehículo",f2:"Vehículo de reemplazo en 1 hora",f3:"Choferes certificados por el DOT y con antecedentes revisados",
- boardT:"Ruta 01 · Lun–Vie",boardLive:"Horario de ejemplo",t1:"Entrada",t2:"Vuelta de mediodía",t3:"Salida",bf1:"3 viajes redondos · 2 turnos",bf2:"Tú defines los horarios",
- whyH:"En la isla de Palm Beach, estacionarse mal puede parar tu obra.",whyP:"Los vehículos de la cuadrilla deben estacionarse dentro del predio. Si no caben, el municipio permite como máximo tres en la calle con permiso. Fuera de eso, cada infracción es un strike.",
- s1k:"Primer strike",s1h:"Una camioneta en la calle",s1p:"Multa de Obras Públicas o la Policía. La obra ahora necesita un acuerdo de gestión de construcción con el municipio.",
- s2k:"Segundo strike",s2h:"El subcontratista que no se enteró",s2p:"Basta con una persona que llegue tarde. Las apelaciones van por escrito dentro de siete días.",
- s3k:"Tercer strike",s3h:"Orden de paro de obra",s3p:"El director de zonificación está obligado por ley a emitirla. Solo el Consejo Municipal puede reanudar el proyecto.",
- s4k:"Con transporte",s4h:"Cero carros de la cuadrilla en la calle",s4p:"Todos se estacionan en el lote de apoyo y llegan juntos. Los propios acuerdos del municipio nombran el transporte como solución.",
- srcL:"Fuente:",srcA:"Town of Palm Beach, estacionamiento en obras y regla de 3 strikes",
- alsoS:"También en el centro de West Palm Beach.",alsoP:"Para proyectos grandes, las condiciones de aprobación de la ciudad pueden incluir estacionamiento externo y transporte, y la ciudad da seguimiento cuando los subcontratistas se estacionan en los vecindarios.",
- howH:"Se arma según tus turnos, no los nuestros.",howP:"Tú manejas a la cuadrilla y las reglas de la obra. Nosotros ponemos los vehículos, los choferes y la puntualidad.",howLocal:"Un solo operador local maneja tu ruta de principio a fin, desde su propio patio en West Palm Beach. Por eso un reemplazo puede llegar en menos de una hora.",
- st1h:"Mándanos la obra y cuántos viajan",st1p:"Dirección, lote de apoyo si lo tienes, horario de turnos y cuántas personas suben.",
- st2h:"Armamos la ruta contigo",st2p:"Paradas, horarios y viajes por día según tus turnos. Tú entregas el horario y el procedimiento de identificación.",
- st3h:"Arranca, y se ajusta a la obra",st3p:"Cambia viajes o salta días según avance la obra. El chofer lleva teléfono en cada recorrido.",
- planH:"Calcula tu ruta en diez segundos.",planP:"Mueve el control al tamaño de tu cuadrilla. Es un punto de partida, no una cotización.",
- crewL:"Pasajeros por turno",daysL:"Días de servicio por semana",tripsL:"Viajes redondos por día",
- rVehL:"vehículos en la ruta",rTripsL:"viajes redondos a la semana",rCarsL:"carros fuera de la calle",
- planFine:"Calculado con 25 pasajeros sentados por vehículo, lo mínimo de nuestro rango de 25–32, para que nadie vaya de pie. Cada pasajero es un carro menos en la calle.",planCta:"Mándalo a despacho",
- termsH:"Condiciones hechas para un calendario de obra.",termsP:"Salen directo de nuestro contrato estándar para obras.",
- tr1h:"Salta un día y no lo pagas",tr1p:"Con 48 horas de aviso, los días no usados no se cobran. Los días festivos se ajustan.",
- tr2h:"Cobertura por fallas",tr2p:"Vehículo de reemplazo en una hora. Si no se completa el día, recibes un crédito diario o un día de reposición.",
- tr3h:"Terminas cuando termina la obra",tr3p:"Cualquiera de las partes puede terminar el acuerdo con 60 días de aviso por escrito.",
- tr4h:"Choferes",tr4p:"Certificados por el DOT y capacitados, con licencia CDL, revisión de antecedentes, pruebas de drogas aleatorias y revisión anual de historial de manejo.",
- tr5h:"Seguro",tr5p:"Seguro de responsabilidad para pasajeros y compensación laboral para nuestros choferes.",tr5v:"Cubierto",
- tr6h:"Vehículos",tr6p:"Tranvías y vehículos tipo autobús, limpios y con aire acondicionado. Elevador para silla de ruedas bajo solicitud.",
- pk:"Contrato activo",ph:"Llevamos a la cuadrilla de un constructor a una residencia en obra en la isla de Palm Beach, cada día hábil.",pd1t:"Plazo",pd2t:"Horario",pd2:"Lun–Vie · 2 turnos",pd3t:"Ruta",pd3:"3 viajes redondos / día",
- pc1:"Molly's Trolleys opera transporte de grupos en el condado de Palm Beach desde 1998.",pc2b:"Nuestro propio patio",pc2:"Vehículos y choferes salen de 800 23rd Street, West Palm Beach, junto con Palm Beach Tours & Transportation. Subcontratistas solo en emergencias y con las mismas condiciones.",pc3:"“El chofer llegó temprano al lugar y fue muy amable…” (traducido)",pc3s:"Un tema en 7 reseñas en",
- faqH:"Lo primero que preguntan los superintendentes.",
- q1:"¿Quién maneja las identificaciones y el horario impreso?",a1:"Tu empresa: tú defines el procedimiento de identificación y publicas el horario para tu cuadrilla. Nosotros definimos rutas y horarios contigo y los ajustamos juntos según cambie la obra.",
- q2:"¿Cómo se cobra?",a2:"Por día de servicio, no por pasajero, según el número de viajes redondos. Solo se aplica un recargo por combustible si el precio promedio rebasa ciertos umbrales, y lo documentamos cada vez.",
- q3:"¿Y si un vehículo se descompone?",a3:"Llega un vehículo de reemplazo en una hora. Si no se completa el día, recibes un crédito diario o un día de reposición en la fecha que acordemos.",
- q4:"¿Se pueden subir herramientas y materiales?",a4:"El transporte es para personas. Los choferes no cargan ni descargan paquetes de los pasajeros.",
- q5:"¿Qué pasa si la obra termina antes?",a5:"Cualquiera de las partes puede terminar el acuerdo con 60 días de aviso por escrito. Los viajes fuera de la ruta regular se contratan aparte.",
- q6:"¿Dónde operan?",a6:"En el condado de Palm Beach, desde nuestro patio en 800 23rd Street, West Palm Beach.",
- qH:"Pide un plan de transporte para tu obra.",qP:"Dinos dónde está la obra y cuántos viajan. Despacho te responde con una ruta propuesta, el número de vehículos y la tarifa diaria.",
- pr1b:"Una ruta real, no un folleto.",pr1:"Paradas, horarios y vehículos según tus turnos.",pr2b:"Un solo precio para toda la obra.",pr2:"Por día de servicio.",pr3b:"Sin amarres.",pr3:"Con 60 días de aviso se termina.",
- callL:"¿Prefieres hablarlo? Llama a despacho.",
- fName:"Tu nombre",fCo:"Empresa",fRole:"Puesto",ro1:"Superintendente",ro2:"Gerente de proyecto",ro3:"Logística de obra",ro4:"Representante del dueño",ro5:"Otro",fPhone:"Celular",fEmail:"Correo de trabajo",fSite:"Dirección de la obra",fRiders:"Pasajeros por turno",fStart:"Inicio deseado",fLot:"Lote de apoyo",fLotE:"(si ya lo tienes)",fNotes:"Turnos y reglas de la obra",fNotesE:"(opcional)",
- fFine:"Usamos estos datos solo para planear tu ruta y contactarte.",fSubmit:"Mandar a despacho",dH:"Solicitud lista para despacho.",dP:"Llama ahora y revisamos la ruta juntos mientras estás en la obra.",dCopy:"Copiar solicitud",
- foot1:"con Palm Beach Tours & Transportation",stopA:"Lote de apoyo",stopB:"Obra",
- errReq:"Falta este dato.",errEmail:"Revisa el correo.",errNum:"Escribe un número."
+const SUBMIT_URL="/api/intake";
+const ES={
+operator:"Servicio de transporte de cuadrillas por Molly's Trolleys",
+navParking:"Reglas de estacionamiento",navCalc:"Calcula la ruta",navTerms:"Condiciones",navFaq:"Preguntas",navCta:"Pide un plan",
+heroEyebrow:"Transporte de cuadrillas · Condado de Palm Beach",
+heroH:"Transporte diario de cuadrillas del estacionamiento a la obra.",
+heroP:"Tu cuadrilla se estaciona en un lote de apoyo. Nosotros la llevamos a la obra y de regreso con un horario basado en tus turnos.",
+heroCta:"Pide un plan de transporte",heroCall:"Llama a despacho — (561) 655-5515",
+fact1:"25–32 asientos por vehículo",fact2:"Condado de Palm Beach",fact3:"Servicio de lunes a viernes disponible",
+routeTitle:"Ejemplo de ruta de obra",routeExample:"Solo ejemplo",stopLot:"Lote de apoyo",stopSite:"Obra",time1:"Entrada",time2:"Mediodía",time3:"Salida",routeNote:"Solo ejemplo. La ruta y los horarios se definen para cada obra.",
+parkingH:"Cuando la cuadrilla no puede estacionarse en la obra, todavía tiene que llegar.",
+parkingP:"Las obras en Palm Beach pueden tener reglas estrictas de estacionamiento. En la isla de Palm Beach, el estacionamiento no autorizado puede llevar a medidas de cumplimiento progresivas.",
+strike1H:"Primera infracción",strike1P:"Se documenta la infracción y el proyecto puede tener que corregir su plan de estacionamiento.",
+strike2H:"Segunda infracción",strike2P:"Otra infracción cuenta contra el proyecto bajo las reglas de estacionamiento para construcción.",
+strike3H:"Orden de paro de obra",strike3P:"Las reglas del municipio contemplan una orden de paro después del tercer strike.",
+parkingSolution:"Un lote de apoyo y un shuttle mantienen los vehículos de los empleados fuera de la obra.",
+sourceLabel:"Fuente:",sourceText:"Town of Palm Beach — requisitos de estacionamiento para construcción",
+howH:"Dale a despacho la obra, el número de pasajeros y los horarios de turno.",
+how1H:"Obra",how1P:"Envía la dirección, pasajeros aproximados por turno, horarios y el lote de apoyo si ya está elegido.",
+how2H:"Ruta",how2P:"Despacho define el número de vehículos, punto de recogida, horario de viajes y necesidades diarias.",
+how3H:"Servicio",how3P:"Los choferes operan la ruta acordada entre el lote de apoyo y la obra. Si cambia el calendario, despacho ajusta el plan contigo.",
+calcH:"Calcula los vehículos necesarios para tu cuadrilla.",calcP:"Ingresa el número de pasajeros y el horario previsto. Es una estimación de planeación, no una cotización.",
+ridersLabel:"Pasajeros por turno",daysLabel:"Días de servicio por semana",tripsLabel:"Viajes redondos por día",vehLabel:"vehículos",weeklyLabel:"viajes redondos por semana",transportedLabel:"pasajeros transportados por turno",
+calcNote:"La estimación usa 25 pasajeros sentados por vehículo. El número final depende de la ruta, horario y vehículo asignado.",calcCta:"Solicitar esta ruta",
+termsH:"Condiciones del servicio",term1H:"Cambios de horario",term1P:"Los días no usados pueden retirarse con 48 horas de aviso, sujeto al contrato de servicio.",
+term2H:"Falla de vehículo",term2P:"Los términos de reemplazo y crédito están definidos en el contrato.",
+term3H:"Cancelación",term3P:"Cualquiera de las partes puede terminar con 60 días de aviso por escrito bajo el modelo actual.",
+term4H:"Choferes",term4P:"Choferes comerciales y credenciales operativas requeridas.",
+term5H:"Seguro",term5P:"Cobertura de responsabilidad para pasajeros y compensación laboral.",
+term6H:"Vehículos",term6P:"Tranvías y vehículos tipo autobús.",
+proofH:"Operando en el condado de Palm Beach.",proof1H:"Patio en West Palm Beach",proof2H:"Servicio actual de construcción",proof2P:"Un proyecto de construcción en Palm Beach usa actualmente el servicio para transportar cuadrillas entre semana.",proof3H:"Molly's Trolleys / PBTT",proof3P:"Equipo operativo local para transporte en el condado de Palm Beach.",
+faqH:"Preguntas sobre el servicio",
+q1:"¿Cómo se cobra?",a1:"El precio depende de la ruta, días de servicio, vehículos necesarios y número de viajes diarios.",
+q2:"¿Necesitamos un lote de apoyo antes de contactar?",a2:"No. Si ya tienes uno, inclúyelo. Si no, dile a despacho lo que sabes de la obra y la cuadrilla.",
+q3:"¿Quién define el horario?",a3:"El horario se arma alrededor de los turnos del proyecto y se acuerda con el equipo de obra.",
+q4:"¿Se pueden llevar materiales de construcción?",a4:"El servicio es para pasajeros. El manejo de materiales o paquetes no forma parte del servicio estándar.",
+q5:"¿Qué pasa si cambia el calendario?",a5:"Contacta a despacho. Los días y horarios pueden ajustarse sujeto al contrato.",
+q6:"¿Dónde operan?",a6:"Condado de Palm Beach.",
+finalEyebrow:"Solicitud a despacho",finalH:"Envía la obra a despacho.",finalP:"Danos la dirección, número de pasajeros y fecha objetivo de inicio. Despacho revisará la solicitud y te contactará sobre la ruta y el servicio.",
+fName:"Nombre",fCompany:"Empresa",fRole:"Puesto",fPhone:"Celular",fEmail:"Correo de trabajo",fSite:"Dirección de la obra",fRiders:"Pasajeros por turno",fStart:"Fecha objetivo de inicio",fLot:"Lote de apoyo — opcional",fNotes:"Horarios de turno o requisitos — opcional",
+privacy:"Se usa solo para revisar tu solicitud y contactarte.",submit:"Enviar a despacho",successH:"Solicitud enviada a despacho.",successP:"Despacho ya tiene la información de tu obra. ¿Necesitas hablar con alguien? (561) 655-5515",failH:"La solicitud no se envió.",failP:"Intenta de nuevo o llama a despacho al (561) 655-5515.",
+footerOperator:"Servicio de transporte de cuadrillas operado por Molly's Trolleys / Palm Beach Tours & Transportation",mobileCta:"Pide un plan"
 };
-const EN = {errReq:"This one's needed.",errEmail:"Check the email address.",errNum:"Enter a number.",stopA:"Staging lot",stopB:"Jobsite"};
-document.querySelectorAll("[data-i]").forEach(el=>{EN[el.dataset.i]??=el.textContent});
+const EN={};
+document.querySelectorAll("[data-i]").forEach(el=>EN[el.dataset.i]=el.textContent);
+document.querySelectorAll("[data-i-svg]").forEach(el=>EN[el.dataset.iSvg]=el.textContent);
 let lang="en";
-const tx=k=>(lang==="es"?ES:EN)[k]??EN[k]??k;
-function setLang(l){lang=l;document.documentElement.lang=l==="es"?"es-MX":"en";
-  document.querySelectorAll("[data-i]").forEach(el=>{const v=tx(el.dataset.i);if(v)el.textContent=v});
-  document.querySelectorAll("[data-i-svg]").forEach(el=>{el.textContent=tx(el.dataset.iSvg)});
-  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===l));
-  try{localStorage.setItem("crew-lang",l)}catch{}
-  plan()}
+function setLang(next){
+  lang=next;
+  document.documentElement.lang=next==="es"?"es-MX":"en";
+  document.querySelectorAll("[data-i]").forEach(el=>{const key=el.dataset.i;el.textContent=(next==="es"?ES:EN)[key]??EN[key]??el.textContent});
+  document.querySelectorAll("[data-i-svg]").forEach(el=>{const key=el.dataset.iSvg;el.textContent=(next==="es"?ES:EN)[key]??EN[key]??el.textContent});
+  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===next)));
+}
 document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
 
-/* nav + mobile bar */
-const nav=document.getElementById("nav"),mbar=document.getElementById("mbar"),quote=document.getElementById("quote");
-let quoteVisible=false;
-addEventListener("scroll",()=>{nav.classList.toggle("scrolled",scrollY>8);mbar.classList.toggle("show",scrollY>520&&!quoteVisible)},{passive:true});
-new IntersectionObserver(es=>{quoteVisible=es[0].isIntersecting;mbar.classList.toggle("show",scrollY>520&&!quoteVisible)},{threshold:.15}).observe(quote);
+const crew=document.getElementById("crew"),crewOut=document.getElementById("crewOut"),veh=document.getElementById("veh"),weekly=document.getElementById("weekly"),ridersResult=document.getElementById("ridersResult");
+let days=5,trips=3;
+function bindChips(id,set){
+  document.getElementById(id).addEventListener("click",e=>{
+    const b=e.target.closest(".chip");if(!b)return;
+    set(Number(b.dataset.v));
+    b.parentElement.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    calc();
+  });
+}
+bindChips("days",v=>days=v);bindChips("rt",v=>trips=v);
+function calc(){
+  const riders=Number(crew.value);
+  crewOut.textContent=riders;
+  veh.textContent=Math.max(1,Math.ceil(riders/25));
+  weekly.textContent=days*trips;
+  ridersResult.textContent=riders;
+  const input=document.getElementById("riders");
+  if(input&&!input.dataset.touched)input.value=String(riders);
+}
+crew.addEventListener("input",calc);
+document.getElementById("riders").addEventListener("input",e=>e.target.dataset.touched="1");
+calc();
 
-/* reveal once */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{rootMargin:"0px 0px -8% 0px"});
-document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+const form=document.getElementById("qform"),okBox=document.getElementById("statusOk"),badBox=document.getElementById("statusBad");
+form.addEventListener("submit",async e=>{
+  e.preventDefault();
+  okBox.className="form-status ok";badBox.className="form-status bad";
+  let valid=true;
+  form.querySelectorAll("[required]").forEach(inp=>{
+    const err=inp.closest(".f").querySelector(".err");
+    let msg="";
+    if(!String(inp.value).trim()) msg=lang==="es"?"Falta este dato.":"This field is required.";
+    else if(inp.type==="email"&&!/^\S+@\S+\.\S+$/.test(inp.value)) msg=lang==="es"?"Revisa el correo.":"Check the email address.";
+    else if(inp.type==="number"&&Number(inp.value)<=0) msg=lang==="es"?"Escribe un número válido.":"Enter a valid number.";
+    err.textContent=msg;
+    if(msg) valid=false;
+  });
+  if(!valid)return;
 
-/* signature: the shuttle runs the route */
-const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-const path=document.getElementById("rp"),bus=document.getElementById("shuttle"),trips=[...document.querySelectorAll(".trip")];
-const L=path.getTotalLength();
-function place(p){const pt=path.getPointAtLength(p*L),pt2=path.getPointAtLength(Math.min(L,p*L+1));const a=Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI;bus.setAttribute("transform",`translate(${pt.x} ${pt.y}) rotate(${Math.max(-25,Math.min(25,a))})`)}
-if(reduce){place(.5);trips[0].classList.add("on")}else{
-  let t0=performance.now();const leg=4200,pause=900;
-  (function tick(now){const cyc=(now-t0)%((leg+pause)*6);const n=Math.floor(cyc/(leg+pause));const within=cyc-n*(leg+pause);
-    let p=Math.min(1,within/leg);p=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;if(n%2)p=1-p;place(p);
-    const active=Math.floor(n/2);trips.forEach((el,i)=>el.classList.toggle("on",i===active));requestAnimationFrame(tick)})(t0)}
+  const d=Object.fromEntries(new FormData(form).entries());
+  d.days=days;d.roundTrips=trips;d.lang=lang;d.vehicles=Math.max(1,Math.ceil(Number(d.riders)/25));d.source="crew-shuttle-landing";d.page=location.href;
 
-/* planner */
-const crew=document.getElementById("crew"),SEATS=25;let days=5,rt=3;
-function chips(id,set){document.getElementById(id).addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;set(+b.dataset.v);b.parentNode.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===b));plan()})}
-chips("days",v=>days=v);chips("rt",v=>rt=v);
-let lastVeh=0;
-function plan(){const n=+crew.value;const veh=Math.max(1,Math.ceil(n/SEATS));
-  document.getElementById("crewOut").textContent=n;document.getElementById("rVeh").textContent=veh;
-  document.getElementById("rTrips").textContent=days*rt;document.getElementById("rCars").textContent=n;
-  const fl=document.getElementById("fleet");if(veh!==lastVeh){fl.innerHTML=Array.from({length:Math.min(veh,24)},(_,i)=>`<svg class="bus ${i>=lastVeh?"in":""}" style="animation-delay:${Math.max(0,i-lastVeh)*40}ms"><use href="#coach"/></svg>`).join("")+(veh>24?`<span class="mono fine">+${veh-24}</span>`:"");lastVeh=veh}
-  const r=document.getElementById("riders");if(r&&!r.dataset.touched)r.value=n}
-crew.addEventListener("input",plan);
-document.getElementById("riders").addEventListener("input",e=>e.target.dataset.touched=1);
-
-/* form */
-const form=document.getElementById("qform");
-form.addEventListener("submit",async e=>{e.preventDefault();let ok=true;
-  form.querySelectorAll("[required]").forEach(inp=>{const f=inp.closest(".f"),err=f.querySelector(".err");let msg="";
-    if(!inp.value.trim())msg=tx("errReq");else if(inp.type==="email"&&!/^\S+@\S+\.\S+$/.test(inp.value))msg=tx("errEmail");else if(inp.type==="number"&&!(+inp.value>0))msg=tx("errNum");
-    f.classList.toggle("bad",!!msg);err.textContent=msg;if(msg&&ok){ok=false;inp.focus()}});
-  if(!ok)return;
-  const d=Object.fromEntries(new FormData(form).entries());d.days=days;d.roundTrips=rt;d.lang=lang;d.vehicles=Math.max(1,Math.ceil(+d.riders/SEATS));d.source="crew-shuttle-landing";d.page=location.href;
-  if(SUBMIT_URL){try{await fetch(SUBMIT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})}catch{}}
-  const summary=[`${d.name} · ${d.role} · ${d.company}`,`${d.phone} · ${d.email}`,`${lang==="es"?"Obra":"Jobsite"}: ${d.site}`,`${lang==="es"?"Pasajeros por turno":"Riders per shift"}: ${d.riders} → ${d.vehicles} ${lang==="es"?"vehículos":"vehicles"}`,`${days} ${lang==="es"?"días/semana":"days/week"} · ${rt} ${lang==="es"?"viajes redondos/día":"round trips/day"}`,d.start?`${lang==="es"?"Inicio":"Start"}: ${d.start}`:"",d.lot?`${lang==="es"?"Lote":"Staging lot"}: ${d.lot}`:"",d.notes||""].filter(Boolean).join("\n");
-  document.getElementById("sum").textContent=summary;form.classList.add("sent");form.querySelector(".done h3").focus?.();
-  document.getElementById("copySum").onclick=async()=>{try{await navigator.clipboard.writeText(summary);document.getElementById("copySum").textContent=lang==="es"?"Copiado":"Copied"}catch{}}});
-form.querySelectorAll("input").forEach(i=>i.addEventListener("input",()=>{const f=i.closest(".f");if(f.classList.contains("bad")){f.classList.remove("bad");f.querySelector(".err").textContent=""}}));
-
-try{const l=localStorage.getItem("crew-lang");if(l==="es")setLang("es");else plan()}catch{plan()}
+  const submit=form.querySelector('button[type="submit"]');
+  submit.disabled=true;
+  try{
+    const res=await fetch(SUBMIT_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(d)});
+    if(!res.ok) throw new Error("submit failed");
+    okBox.style.display="block";badBox.style.display="none";
+    okBox.scrollIntoView({behavior:"smooth",block:"nearest"});
+  }catch{
+    badBox.style.display="block";okBox.style.display="none";
+    badBox.scrollIntoView({behavior:"smooth",block:"nearest"});
+  }finally{
+    submit.disabled=false;
+  }
+});
 </script>
 </body>
 </html>
