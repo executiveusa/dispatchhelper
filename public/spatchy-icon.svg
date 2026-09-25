@@ -1,31 +1,8 @@
-<svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Spatchy AI Icon Only - For favicons and small displays -->
-
-  <!-- Background circle -->
-  <circle cx="25" cy="25" r="24" fill="#2563EB"/>
-
-  <!-- Stylized "S" with circuit pattern in white -->
-  <path d="M18 13 Q25 13, 25 20 Q25 24, 21 24 Q25 24, 25 28 Q25 37, 18 37"
-        stroke="white"
-        stroke-width="3.5"
-        fill="none"
-        stroke-linecap="round"/>
-
-  <!-- Circuit nodes -->
-  <circle cx="18" cy="13" r="2" fill="white"/>
-  <circle cx="25" cy="20" r="2" fill="white"/>
-  <circle cx="21" cy="24" r="2" fill="#0EA5E9"/>
-  <circle cx="25" cy="28" r="2" fill="white"/>
-  <circle cx="18" cy="37" r="2" fill="white"/>
-
-  <!-- Connection lines -->
-  <line x1="25" y1="20" x2="30" y2="18" stroke="#0EA5E9" stroke-width="1.5"/>
-  <line x1="25" y1="28" x2="30" y2="30" stroke="#0EA5E9" stroke-width="1.5"/>
-  <circle cx="30" cy="18" r="1.5" fill="#0EA5E9"/>
-  <circle cx="30" cy="30" r="1.5" fill="#0EA5E9"/>
-
-  <!-- AI indicator dots -->
-  <circle cx="32" cy="25" r="1" fill="white" opacity="0.7"/>
-  <circle cx="35" cy="25" r="1" fill="white" opacity="0.7"/>
-  <circle cx="38" cy="25" r="1" fill="white" opacity="0.7"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">SPATCHY road S</title>
+  <desc id="desc">A black winding road forming an S with an orange dashed center line.</desc>
+  <path d="M420 95 C210 85 140 195 245 255 C350 315 430 325 430 410 C430 500 315 545 150 510"
+        fill="none" stroke="#0E1116" stroke-width="122" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M420 95 C210 85 140 195 245 255 C350 315 430 325 430 410 C430 500 315 545 150 510"
+        fill="none" stroke="#F2541B" stroke-width="15" stroke-linecap="round" stroke-dasharray="34 28"/>
 </svg>
