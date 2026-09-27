@@ -108,8 +108,9 @@ form{background:#fff;color:var(--ink);border-radius:18px;padding:28px;display:gr
 .f .err{color:#B42318;font-size:12px;min-height:1em}
 .form-foot{grid-column:1/-1;display:flex;justify-content:space-between;gap:16px;align-items:center}
 .form-status{grid-column:1/-1;display:none;border-radius:12px;padding:16px}
-.form-status.ok{display:block;background:#E9F7ED;color:#173B20}
-.form-status.bad{display:block;background:#FDECEC;color:#6E1E1E}
+.form-status.ok{background:#E9F7ED;color:#173B20}
+.form-status.bad{background:#FDECEC;color:#6E1E1E}
+.form-status.show{display:block}
 footer{padding:32px 0;border-top:1px solid var(--line);font-size:14px}
 footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .mobile-bar{display:none}
@@ -179,7 +180,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
     <figure class="route-board" aria-label="Example jobsite shuttle route">
       <div class="board-head">
         <span data-i="routeTitle">Example jobsite route</span>
-        <span data-i="routeExample">Example only</span>
+        <span data-i="routeAvail">24/7 availability</span>
       </div>
       <svg class="route-line" viewBox="0 0 520 210" aria-hidden="true">
         <path d="M55 160 C160 160 160 48 270 58 S395 160 462 60" fill="none" stroke="#2A303A" stroke-width="12" stroke-linecap="round"/>
@@ -360,7 +361,7 @@ heroH:"Transporte diario de cuadrillas del estacionamiento a la obra.",
 heroP:"Tu cuadrilla se estaciona en un lote de apoyo. Nosotros la llevamos a la obra y de regreso con un horario basado en tus turnos.",
 heroCta:"Pide un plan de transporte",heroCall:"Llama a despacho — (561) 655-5515",
 fact1:"25–32 asientos por vehículo",fact2:"Condado de Palm Beach",fact3:"Servicio de lunes a viernes disponible",
-routeTitle:"Ejemplo de ruta de obra",routeExample:"Solo ejemplo",stopLot:"Lote de apoyo",stopSite:"Obra",time1:"Entrada",time2:"Mediodía",time3:"Salida",routeNote:"Solo ejemplo. La ruta y los horarios se definen para cada obra.",
+routeTitle:"Ejemplo de ruta de obra",routeAvail:"Disponible 24/7",stopLot:"Lote de apoyo",stopSite:"Obra",time1:"Entrada",time2:"Mediodía",time3:"Salida",routeNote:"Solo ejemplo. La ruta y los horarios se definen para cada obra.",
 parkingH:"Cuando la cuadrilla no puede estacionarse en la obra, todavía tiene que llegar.",
 parkingP:"Las obras en Palm Beach pueden tener reglas estrictas de estacionamiento. En la isla de Palm Beach, el estacionamiento no autorizado puede llevar a medidas de cumplimiento progresivas.",
 strike1H:"Primera infracción",strike1P:"Se documenta la infracción y el proyecto puede tener que corregir su plan de estacionamiento.",
@@ -434,7 +435,7 @@ calc();
 const form=document.getElementById("qform"),okBox=document.getElementById("statusOk"),badBox=document.getElementById("statusBad");
 form.addEventListener("submit",async e=>{
   e.preventDefault();
-  okBox.className="form-status ok";badBox.className="form-status bad";
+  okBox.classList.remove("show");badBox.classList.remove("show");
   let valid=true;
   form.querySelectorAll("[required]").forEach(inp=>{
     const err=inp.closest(".f").querySelector(".err");
@@ -455,10 +456,10 @@ form.addEventListener("submit",async e=>{
   try{
     const res=await fetch(SUBMIT_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(d)});
     if(!res.ok) throw new Error("submit failed");
-    okBox.style.display="block";badBox.style.display="none";
+    okBox.classList.add("show");
     okBox.scrollIntoView({behavior:"smooth",block:"nearest"});
   }catch{
-    badBox.style.display="block";okBox.style.display="none";
+    badBox.classList.add("show");
     badBox.scrollIntoView({behavior:"smooth",block:"nearest"});
   }finally{
     submit.disabled=false;
