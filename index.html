@@ -260,7 +260,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
           <div class="result"><b id="weekly">15</b><span data-i="weeklyLabel">round trips per week</span></div>
           <div class="result"><b id="ridersResult">40</b><span data-i="transportedLabel">riders transported per shift</span></div>
         </div>
-        <p class="note" data-i="calcNote">Vehicle estimate uses 25 seated riders per vehicle. Final vehicle count depends on the route, schedule and vehicle assigned.</p>
+        <p class="note" data-i="calcNote">Vehicles seat 27–31 riders; the estimate plans on 27. Final vehicle count depends on the route, schedule and vehicle assigned.</p>
         <a class="btn btn-primary" href="#quote" style="margin-top:22px;align-self:flex-start" data-i="calcCta">Request this route</a>
       </div>
     </div>
@@ -341,6 +341,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 
 <script>
 const SUBMIT_URL="/api/intake";
+const PLANNING_SEATS=27; // mirrors fleet_capacity.planning_seats (fleet: 27–31 seats)
 const ES={
 operator:"Servicio de transporte de cuadrillas por Molly's Trolleys",
 navParking:"Reglas de estacionamiento",navCalc:"Calcula la ruta",navTerms:"Condiciones",navFaq:"Preguntas",navCta:"Pide un plan",
@@ -363,7 +364,7 @@ how2H:"Ruta",how2P:"Despacho define el número de vehículos, punto de recogida,
 how3H:"Servicio",how3P:"Los choferes operan la ruta acordada entre el lote de apoyo y la obra. Si cambia el calendario, despacho ajusta el plan contigo.",
 calcH:"Calcula los vehículos necesarios para tu cuadrilla.",calcP:"Ingresa el número de pasajeros y el horario previsto. Es una estimación de planeación, no una cotización.",
 ridersLabel:"Pasajeros por turno",daysLabel:"Días de servicio por semana",tripsLabel:"Viajes redondos por día",vehLabel:"vehículos",weeklyLabel:"viajes redondos por semana",transportedLabel:"pasajeros transportados por turno",
-calcNote:"La estimación usa 25 pasajeros sentados por vehículo. El número final depende de la ruta, horario y vehículo asignado.",calcCta:"Solicitar esta ruta",
+calcNote:"Los vehículos tienen de 27 a 31 asientos; la estimación usa 27. El número final depende de la ruta, horario y vehículo asignado.",calcCta:"Solicitar esta ruta",
 termsH:"Condiciones del servicio",term1H:"Cambios de horario",term1P:"Los días no usados pueden retirarse con 48 horas de aviso, sujeto al contrato de servicio.",
 term2H:"Falla de vehículo",term2P:"Los términos de reemplazo y crédito están definidos en el contrato.",
 term3H:"Cancelación",term3P:"Cualquiera de las partes puede terminar con 60 días de aviso por escrito bajo el modelo actual.",
@@ -410,7 +411,7 @@ bindChips("days",v=>days=v);bindChips("rt",v=>trips=v);
 function calc(){
   const riders=Number(crew.value);
   crewOut.textContent=riders;
-  veh.textContent=Math.max(1,Math.ceil(riders/25));
+  veh.textContent=Math.max(1,Math.ceil(riders/PLANNING_SEATS));
   weekly.textContent=days*trips;
   ridersResult.textContent=riders;
   const input=document.getElementById("riders");
@@ -437,7 +438,7 @@ form.addEventListener("submit",async e=>{
   if(!valid)return;
 
   const d=Object.fromEntries(new FormData(form).entries());
-  d.days=days;d.roundTrips=trips;d.lang=lang;d.vehicles=Math.max(1,Math.ceil(Number(d.riders)/25));d.source="crew-shuttle-landing";d.page=location.href;
+  d.days=days;d.roundTrips=trips;d.lang=lang;d.vehicles=Math.max(1,Math.ceil(Number(d.riders)/PLANNING_SEATS));d.source="crew-shuttle-landing";d.page=location.href;
 
   const submit=form.querySelector('button[type="submit"]');
   submit.disabled=true;

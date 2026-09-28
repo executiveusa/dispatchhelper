@@ -1,5 +1,9 @@
 -- Crew Shuttle hardening: atomic intake limits, reviewed outreach drafts, admin-only desk access.
 
+-- is_spatchy_admin() below reads profiles.is_admin. add_is_admin_column.sql has no timestamp
+-- prefix, so the Supabase CLI never runs it; guarantee the column here.
+alter table public.profiles add column if not exists is_admin boolean not null default false;
+
 create table if not exists public.outreach_drafts (
   id uuid primary key default gen_random_uuid(),
   jobsite_id uuid not null references public.jobsites(id) on delete cascade,
