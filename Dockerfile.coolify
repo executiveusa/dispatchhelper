@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --legacy-peer-deps
 COPY . .
-RUN npm run build \
+RUN npm install --no-save esbuild && npm run build \
  && npx esbuild netlify/functions/intake.mts --bundle --format=esm --platform=node \
       --banner:js="globalThis.Netlify={env:{get:(k)=>process.env[k]}}" \
       --outfile=server/intake.bundle.mjs
