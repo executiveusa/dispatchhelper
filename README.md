@@ -125,6 +125,26 @@ Theme configuration is in `src/lib/theme.ts` (to be created).
 
 ---
 
+## 🚌 Fleet & Intake
+
+### Fleet capacity
+- 3 vehicles x 9-11 seats each (27-31 seats total).
+- Planning basis: 27 seats (`fleet_capacity.planning_seat_basis`). Intake quotes vehicles off this basis server-side via `estimate_vehicles(riders)`; the browser never computes vehicle counts.
+- 24/7 service.
+
+### Environment variables required by `netlify/functions/intake.mts`
+- `SUPABASE_URL` - self-hosted Supabase REST URL (leads insert + RPC). Function returns 503 `service_not_configured` without it.
+- `SUPABASE_SERVICE_ROLE_KEY` - service role key (leads insert, `estimate_vehicles` RPC, rate-limit table).
+- `INTAKE_RATE_LIMIT_SALT` - salt for rate-limit hashing.
+- Optional: `DISPATCH_EMAIL_WEBHOOK_URL`, `DISPATCH_EMAIL_TO`, `DISPATCH_SMS_WEBHOOK_URL`, `DISPATCH_SMS_TO` (lead notifications).
+- `jobsite-lead-engine-scheduled.mts` also uses `AI_GATEWAY_API_KEY` / `AI_GATEWAY_URL`.
+
+### Database migrations (apply in order)
+1. `supabase/migrations/202609240002_spatchy_hardening.sql` - `is_spatchy_admin()` fix (no is_admin dependency), profiles.is_admin, leads table w/ server-side `vehicles`.
+2. `supabase/migrations/202609280001_spatchy_fleet_capacity.sql` - `fleet_capacity` (planning basis 27), `fleet_vehicles` roster, `estimate_vehicles(riders)` RPC (service_role only), `leads.seat_basis`, lang/status CHECKs, admin-only RLS, `prune_intake_rate_limits()`.
+
+---
+
 ## 🚢 Deployment
 
 ### Frontend (Vercel)
