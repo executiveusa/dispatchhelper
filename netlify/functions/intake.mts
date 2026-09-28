@@ -55,7 +55,6 @@ export default async (req: Request, context: any) => {
   const riders = integer(body.riders, 1, 10000);
   const days = body.days === undefined ? null : integer(body.days, 1, 7);
   const roundTrips = body.roundTrips === undefined ? null : integer(body.roundTrips, 1, 20);
-  const vehicles = body.vehicles === undefined ? null : integer(body.vehicles, 1, 500);
   const email = clean(body.email, 320);
 
   if (
@@ -63,8 +62,7 @@ export default async (req: Request, context: any) => {
     !riders ||
     !/^\S+@\S+\.\S+$/.test(email) ||
     (body.days !== undefined && !days) ||
-    (body.roundTrips !== undefined && !roundTrips) ||
-    (body.vehicles !== undefined && !vehicles)
+    (body.roundTrips !== undefined && !roundTrips)
   ) {
     return Response.json({ ok: false, error: "invalid_request", fields: missing }, { status: 400 });
   }
@@ -91,6 +89,16 @@ export default async (req: Request, context: any) => {
     return Response.json({ ok: false, error: "rate_limited" }, { status: 429 });
   }
 
+  // Vehicle count comes from fleet_capacity (27–31 seats, planned on 27), never from the browser.
+  const { data: estimate, error: estimateError } = await supabase
+    .rpc("estimate_vehicles", { p_riders: riders })
+    .single();
+  if (estimateError || !estimate) {
+    return Response.json({ ok: false, error: "estimate_failed" }, { status: 503 });
+  }
+  const vehicles = (estimate as { vehicles: number }).vehicles;
+  const seatBasis = (estimate as { planning_seats: number }).planning_seats;
+
   const record = {
     name: clean(body.name, 160),
     company: clean(body.company, 200),
@@ -105,7 +113,8 @@ export default async (req: Request, context: any) => {
     days,
     round_trips: roundTrips,
     vehicles,
-    lang: clean(body.lang, 10) || "en",
+    seat_basis: seatBasis,
+    lang: clean(body.lang, 10) === "es" ? "es" : "en",
     source: clean(body.source, 120) || "crew-shuttle-landing",
     page: clean(body.page, 1000) || null,
     status: "new",
