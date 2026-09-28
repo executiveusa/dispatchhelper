@@ -1,8 +1,9 @@
-name: Crew Shuttle Upgrade Verify
+name: SPATCHY Verify
 
 on:
   push:
     branches:
+      - main
       - upgrade/crew-shuttle-spatchy-2026-09-24
   pull_request:
     branches:
