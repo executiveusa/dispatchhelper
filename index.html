@@ -438,7 +438,7 @@ form.addEventListener("submit",async e=>{
   if(!valid)return;
 
   const d=Object.fromEntries(new FormData(form).entries());
-  d.days=days;d.roundTrips=trips;d.lang=lang;d.vehicles=Math.max(1,Math.ceil(Number(d.riders)/PLANNING_SEATS));d.source="crew-shuttle-landing";d.page=location.href;
+  d.days=days;d.roundTrips=trips;d.lang=lang;d.vehicles=Math.max(1,Math.ceil(Number(d.riders)/PLANNING_SEATS));d.source=(function(){try{var v=(new URLSearchParams(location.search).get("source")||"").trim().toLowerCase();return /^[a-z0-9_-]{1,80}$/.test(v)?v:"crew-shuttle-landing"}catch(e){return "crew-shuttle-landing"}})();d.page=location.href;
 
   const submit=form.querySelector('button[type="submit"]');
   submit.disabled=true;

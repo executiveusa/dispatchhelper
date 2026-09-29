@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /desk.html
+Disallow: /api/
+
+Sitemap: https://spatchy.netlify.app/sitemap.xml
