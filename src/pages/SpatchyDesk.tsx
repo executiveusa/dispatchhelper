@@ -21,7 +21,8 @@ export default function SpatchyDesk() {
   const [tab, setTab] = useState<Tab>("Leads");
   const [leads, setLeads] = useState<Row[]>([]);
   const [jobsites, setJobsites] = useState<Row[]>([]);
-  const [accounts, setAccounts] = useState<Row[]>([]);\n  const [drafts, setDrafts] = useState<Row[]>([]);
+  const [accounts, setAccounts] = useState<Row[]>([]);
+  const [drafts, setDrafts] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -38,7 +39,8 @@ export default function SpatchyDesk() {
     if (firstError) setError(firstError.message || "Could not load desk data.");
     setLeads(l.data || []);
     setJobsites(j.data || []);
-    setAccounts(a.data || []);\n    setDrafts(d.data || []);
+    setAccounts(a.data || []);
+    setDrafts(d.data || []);
     setLoading(false);
   }
 
@@ -50,7 +52,13 @@ export default function SpatchyDesk() {
     active: accounts.filter((x) => x.status === "active").length,
   }), [leads, drafts, jobsites, accounts]);
 
-  async function approveDraft(id: string) {\n    const db = supabase as any;\n    const { error } = await db.from("outreach_drafts").update({ status: "approved", approved_at: new Date().toISOString() }).eq("id", id);\n    if (error) setError(error.message); else await load();\n  }\n\n  async function approveLead(id: string) {
+  async function approveDraft(id: string) {
+    const db = supabase as any;
+    const { error } = await db.from("outreach_drafts").update({ status: "approved", approved_at: new Date().toISOString() }).eq("id", id);
+    if (error) setError(error.message); else await load();
+  }
+
+  async function approveLead(id: string) {
     const db = supabase as any;
     const { error } = await db.from("leads").update({
       approved_at: new Date().toISOString(),
