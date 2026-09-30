@@ -30,45 +30,56 @@ export async function handleReply(req: Request, env: Env): Promise<Response> {
   const text = String(body?.text ?? "").slice(0, 20000);
   const db = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 
-  const { data: last } = await db
-    .from("outreach_drafts")
-    .select("id, jobsite_id")
-    .ilike("to_email", email)
-    .in("status", ["sent", "replied"])
-    .order("sent_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  try {
+    const { data: last, error: lastErr } = await db
+      .from("outreach_drafts")
+      .select("id, jobsite_id")
+      .ilike("to_email", email)
+      .in("status", ["sent", "replied"])
+      .order("sent_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-  if (isStopReply(text)) {
-    await db.from("suppression_list").upsert({ email, reason: "reply_stop", source: "outreach-reply" }, { onConflict: "email", ignoreDuplicates: true });
-    await db.from("outreach_drafts").update({ status: "superseded" }).ilike("to_email", email).in("status", ["draft", "approved"]);
-    await db.from("outreach_events").insert({ draft_id: last?.id ?? null, jobsite_id: last?.jobsite_id ?? null, email, kind: "stop", payload: { subject: body?.subject ?? null } });
-    return Response.json({ ok: true, action: "suppressed", matched: Boolean(last) });
-  }
+    if (lastErr) throw new Error(`reply lookup failed: ${lastErr.message}`);
 
-  if (!last) {
-    await db.from("outreach_events").insert({ email, kind: "reply", payload: { subject: body?.subject ?? null, unmatched: true } });
-    return Response.json({ ok: true, action: "logged_unmatched", matched: false });
-  }
-
-  await db.from("outreach_drafts").update({ status: "replied", replied_at: new Date().toISOString() }).eq("id", last.id);
-  await db.from("outreach_drafts").update({ status: "superseded" }).eq("jobsite_id", last.jobsite_id).in("status", ["draft", "approved"]);
-  await db.from("outreach_events").insert({ draft_id: last.id, jobsite_id: last.jobsite_id, email, kind: "reply", payload: { subject: body?.subject ?? null, text: text.slice(0, 2000) } });
-  await db.from("jobsites").update({ status: "replied" }).eq("id", last.jobsite_id);
-
-  const alert = { type: "outreach_reply", from: email, subject: body?.subject ?? null, preview: text.slice(0, 280), jobsite_id: last.jobsite_id };
-  const errors: string[] = [];
-  for (const [u, to] of [
-    [env("DISPATCH_SMS_WEBHOOK_URL"), env("DISPATCH_SMS_TO")],
-    [env("DISPATCH_EMAIL_WEBHOOK_URL"), env("DISPATCH_EMAIL_TO")],
-  ]) {
-    try {
-      await postWebhook(u, { ...alert, to });
-    } catch (e) {
-      errors.push((e as Error).message);
+    if (isStopReply(text)) {
+      await checked(db.from("suppression_list").upsert({ email, reason: "reply_stop", source: "outreach-reply" }, { onConflict: "email", ignoreDuplicates: true }));
+      await checked(db.from("outreach_drafts").update({ status: "superseded" }).ilike("to_email", email).in("status", ["draft", "approved"]));
+      await checked(db.from("outreach_events").insert({ draft_id: last?.id ?? null, jobsite_id: last?.jobsite_id ?? null, email, kind: "stop", payload: { subject: body?.subject ?? null } }));
+      return Response.json({ ok: true, action: "suppressed", matched: Boolean(last) });
     }
+
+    if (!last) {
+      await checked(db.from("outreach_events").insert({ email, kind: "reply", payload: { subject: body?.subject ?? null, unmatched: true } }));
+      return Response.json({ ok: true, action: "logged_unmatched", matched: false });
+    }
+
+    await checked(db.from("outreach_drafts").update({ status: "replied", replied_at: new Date().toISOString() }).eq("id", last.id));
+    await checked(db.from("outreach_drafts").update({ status: "superseded" }).eq("jobsite_id", last.jobsite_id).in("status", ["draft", "approved"]));
+    await checked(db.from("outreach_events").insert({ draft_id: last.id, jobsite_id: last.jobsite_id, email, kind: "reply", payload: { subject: body?.subject ?? null, text: text.slice(0, 2000) } }));
+    await checked(db.from("jobsites").update({ status: "replied" }).eq("id", last.jobsite_id));
+
+    const alert = { type: "outreach_reply", from: email, subject: body?.subject ?? null, preview: text.slice(0, 280), jobsite_id: last.jobsite_id };
+    const errors: string[] = [];
+    for (const [u, to] of [
+      [env("DISPATCH_SMS_WEBHOOK_URL"), env("DISPATCH_SMS_TO")],
+      [env("DISPATCH_EMAIL_WEBHOOK_URL"), env("DISPATCH_EMAIL_TO")],
+    ]) {
+      try {
+        await postWebhook(u, { ...alert, to });
+      } catch (e) {
+        errors.push((e as Error).message);
+      }
+    }
+    return Response.json({ ok: true, action: "replied", matched: true, alertErrors: errors.length ? errors : undefined });
+  } catch {
+    return Response.json({ ok: false, error: "database_operation_failed" }, { status: 503 });
   }
-  return Response.json({ ok: true, action: "replied", matched: true, alertErrors: errors.length ? errors : undefined });
+}
+
+async function checked(operation: PromiseLike<{ error: { message: string } | null }>) {
+  const result = await operation;
+  if (result.error) throw new Error(result.error.message);
 }
 
 export default async (req: Request) => handleReply(req, (k) => Netlify.env.get(k));

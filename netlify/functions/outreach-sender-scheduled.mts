@@ -48,24 +48,27 @@ export async function runSender(env: Env, now = new Date()) {
       await skip(d.id, "skipped_no_email");
       continue;
     }
-    const { data: sup } = await db.from("suppression_list").select("email").eq("email", email).maybeSingle();
+    const { data: sup, error: supErr } = await db.from("suppression_list").select("email").eq("email", email).maybeSingle();
+    if (supErr) throw new Error(`suppression lookup failed: ${supErr.message}`);
     if (sup) {
       await skip(d.id, "skipped_suppressed");
       continue;
     }
-    const { data: site } = await db.from("jobsites").select("lead_id, source_code").eq("id", d.jobsite_id).single();
-    if (site?.lead_id) {
+    const { data: site, error: siteErr } = await db.from("jobsites").select("lead_id, source_code").eq("id", d.jobsite_id).single();
+    if (siteErr || !site) throw new Error(`jobsite lookup failed: ${siteErr?.message || "not found"}`);
+    if (site.lead_id) {
       await skip(d.id, "superseded");
       continue;
     }
     // One language per jobsite per step: if the other language already went out, don't send twice.
-    const { data: twin } = await db
+    const { data: twin, error: twinErr } = await db
       .from("outreach_drafts")
       .select("id")
       .eq("jobsite_id", d.jobsite_id)
       .eq("sequence_step", d.sequence_step)
       .in("status", ["sent", "replied"])
       .limit(1);
+    if (twinErr) throw new Error(`previous send lookup failed: ${twinErr.message}`);
     if (twin && twin.length) {
       await skip(d.id, "superseded");
       continue;
@@ -118,12 +121,15 @@ async function queueFollowups(db: SupabaseClient, siteUrl: string) {
   let queued = 0;
   for (const p of sent || []) {
     const next = (p.sequence_step + 1) as 2 | 3;
-    const { data: child } = await db.from("outreach_drafts").select("id").eq("parent_draft_id", p.id).eq("sequence_step", next).maybeSingle();
+    const { data: child, error: childErr } = await db.from("outreach_drafts").select("id").eq("parent_draft_id", p.id).eq("sequence_step", next).maybeSingle();
+    if (childErr) throw new Error(`follow-up lookup failed: ${childErr.message}`);
     if (child) continue;
-    const { data: site } = await db.from("jobsites").select("*").eq("id", p.jobsite_id).single();
-    if (!site || site.lead_id) continue;
+    const { data: site, error: siteErr } = await db.from("jobsites").select("*").eq("id", p.jobsite_id).single();
+    if (siteErr || !site) throw new Error(`follow-up jobsite lookup failed: ${siteErr?.message || "not found"}`);
+    if (site.lead_id) continue;
     if (p.to_email) {
-      const { data: sup } = await db.from("suppression_list").select("email").eq("email", p.to_email.toLowerCase()).maybeSingle();
+      const { data: sup, error: supErr } = await db.from("suppression_list").select("email").eq("email", p.to_email.toLowerCase()).maybeSingle();
+      if (supErr) throw new Error(`follow-up suppression lookup failed: ${supErr.message}`);
       if (sup) continue;
     }
     const copy = draftOutreach(
@@ -143,7 +149,8 @@ async function queueFollowups(db: SupabaseClient, siteUrl: string) {
       sequence_step: next,
       send_after: addBusinessDays(new Date(p.sent_at), FOLLOWUP_BUSINESS_DAYS[next]).toISOString(),
     });
-    if (!insErr) queued++;
+    if (insErr) throw new Error(`follow-up insert failed: ${insErr.message}`);
+    queued++;
   }
   return queued;
 }
